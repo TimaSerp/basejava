@@ -35,8 +35,7 @@ public class ArrayStorage {
             if (uuid.equals(storage[i].getUuid())) {
                 storage[i].setUuid(storage[rIndexMax - 1].getUuid());
                 storage[rIndexMax - 1].setUuid(null);
-                rIndexMax--;
-                return;
+                break;
             }
         }
         rIndexMax--;
