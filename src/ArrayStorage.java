@@ -6,22 +6,21 @@ import java.util.Arrays;
 
 public class ArrayStorage {
     private Resume[] storage = new Resume[10000];
-    private String uuid;
-    private int rIndexMax = 0;
+    private int count = 0;
 
     void clear() {
-        Arrays.fill(storage, 0, (rIndexMax), null);
-        rIndexMax = 0;
+        Arrays.fill(storage, 0, count, null);
+        count = 0;
     }
 
     void save(Resume r) {
-        storage[rIndexMax] = r;
-        rIndexMax++;
+        storage[count] = r;
+        count++;
     }
 
     Resume get(String uuid) {
         if (checkExist()) {
-            for (int i = 0; i < rIndexMax; i++) {
+            for (int i = 0; i < count; i++) {
                 if (uuid.equals(storage[i].getUuid())) {
                     return storage[i];
                 }
@@ -30,35 +29,33 @@ public class ArrayStorage {
         return null;
     }
 
+    private boolean checkExist() {
+        if (count == 0) {
+            System.out.println("Error: there are no resume in your array");
+            return false;
+        }
+        return true;
+    }
+
     void delete(String uuid) {
-        for (int i = 0; i < rIndexMax; i++) {
+        for (int i = 0; i < count; i++) {
             if (uuid.equals(storage[i].getUuid())) {
-                storage[i].setUuid(storage[rIndexMax - 1].getUuid());
-                storage[rIndexMax - 1].setUuid(null);
+                storage[i].setUuid(storage[count - 1].getUuid());
+                storage[count - 1] = null;
+                count--;
                 break;
             }
         }
-        rIndexMax--;
     }
 
     /**
      * @return array, contains only Resumes in storage (without null)
      */
     Resume[] getAll() {
-        Resume[] storageCopy = Arrays.copyOf(storage, rIndexMax);
-        return storageCopy;
+        return Arrays.copyOf(storage, count);
     }
 
     int size() {
-        return rIndexMax;
-    }
-
-    boolean checkExist() {
-        if (rIndexMax == 0) {
-            System.out.println("Error: there are no resume in your array");
-            return false;
-        } else {
-            return true;
-        }
+        return count;
     }
 }
