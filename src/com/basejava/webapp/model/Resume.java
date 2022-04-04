@@ -1,8 +1,10 @@
 /**
  * Initial resume class
  */
+package com.basejava.webapp.model;
+
 public class Resume {
-    String uuid;
+    private String uuid;
 
     public String getUuid() {
         return uuid;
