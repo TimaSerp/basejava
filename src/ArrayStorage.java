@@ -40,7 +40,7 @@ public class ArrayStorage {
     void delete(String uuid) {
         for (int i = 0; i < count; i++) {
             if (uuid.equals(storage[i].getUuid())) {
-                storage[i].setUuid(storage[count - 1].getUuid());
+                storage[i] = storage[count - 1];
                 storage[count - 1] = null;
                 count--;
                 break;
