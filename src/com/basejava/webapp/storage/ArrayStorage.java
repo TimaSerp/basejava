@@ -1,4 +1,5 @@
-package com.basejava.webapp.storage; /**
+package com.basejava.webapp.storage;
+/**
  * Array based storage for Resumes
  */
 
@@ -7,14 +8,12 @@ import com.basejava.webapp.model.Resume;
 import java.util.Arrays;
 
 public class ArrayStorage {
-    private Resume[] storage = new Resume[10000];
+    private final Resume[] storage = new Resume[10000];
     private int size = 0;
-    private int count; // for iteration
 
     public void update(Resume r) {
         if (checkExist(r.getUuid())) {
-            storage[count] = r;
-            return;
+            storage[getIndex(r.getUuid())] = r;
         }
     }
 
@@ -22,20 +21,20 @@ public class ArrayStorage {
         if (size == 0) {
             System.out.println("Error: there are no resume in your storage");
             return false;
-        } else if (checkMatch(uuid)){
+        } else if (getIndex(uuid) < storage.length){
             return true;
         }
         System.out.println("Error: no resume with uuid " + uuid + " found!");
         return false;
     }
 
-    private boolean checkMatch(String uuid) {
-        for (count = 0; count < size; count++) {
-            if (storage[count].getUuid().equals(uuid)) {
-                return true;
+    private int getIndex(String uuid) {
+        for (int i = 0; i < size; i++) {
+            if (storage[i].getUuid().equals(uuid)) {
+                return i;
             }
         }
-        return false;
+        return storage.length;
     }
 
     public void clear() {
@@ -44,17 +43,17 @@ public class ArrayStorage {
     }
 
     public void save(Resume r) {
-        if (checkMatchOrFull(r.getUuid())) {
+        if (checkExistOrFull(r.getUuid())) {
             storage[size] = r;
             size++;
         }
     }
 
-    private boolean checkMatchOrFull(String uuid) {
-        if (checkMatch(uuid)) {
+    private boolean checkExistOrFull(String uuid) {
+        if (getIndex(uuid) < storage.length) {
             System.out.println("Error: resume with uuid " + uuid + " is already exist");
             return false;
-        } else if (size == 9999) {
+        } else if (size == storage.length - 1) {
             System.out.println("Error: your storage is overflow");
             return false;
         }
@@ -63,7 +62,7 @@ public class ArrayStorage {
 
     public Resume get(String uuid) {
         if (checkExist(uuid)) {
-            return storage[count];
+            return storage[getIndex(uuid)];
         }
         return null;
     }
@@ -71,7 +70,7 @@ public class ArrayStorage {
 
     public void delete(String uuid) {
         if (checkExist(uuid)) {
-            storage[count] = storage[size - 1];
+            storage[getIndex(uuid)] = storage[size - 1];
             storage[size - 1] = null;
             size--;
         }
