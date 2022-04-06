@@ -12,7 +12,9 @@ public class ArrayStorage {
     private int size = 0;
 
     public void update(Resume r) {
-        if (checkExist(r.getUuid())) {
+        if (getIndex(r.getUuid()) == -1){
+            System.out.println("Error: no resume with uuid " + r.getUuid() + " found!");
+        } else {
             storage[getIndex(r.getUuid())] = r;
         }
     }
@@ -34,7 +36,9 @@ public class ArrayStorage {
     }
 
     public Resume get(String uuid) {
-        if (checkExist(uuid)) {
+        if (getIndex(uuid) == -1){
+            System.out.println("Error: no resume with uuid " + uuid + " found!");
+        } else {
             return storage[getIndex(uuid)];
         }
         return null;
@@ -42,7 +46,9 @@ public class ArrayStorage {
 
 
     public void delete(String uuid) {
-        if (checkExist(uuid)) {
+        if (getIndex(uuid) == -1){
+            System.out.println("Error: no resume with uuid " + uuid + " found!");
+        } else {
             storage[getIndex(uuid)] = storage[size - 1];
             storage[size - 1] = null;
             size--;
@@ -58,18 +64,6 @@ public class ArrayStorage {
 
     public int size() {
         return size;
-    }
-
-    private boolean checkExist(String uuid) {
-        if (getIndex(uuid) == -1){
-            System.out.println("Error: no resume with uuid " + uuid + " found!");
-            return false;
-        }
-        if (size == 0) {
-            System.out.println("Error: there are no resume in your storage");
-            return false;
-        }
-        return true;
     }
 
     private int getIndex(String uuid) {
