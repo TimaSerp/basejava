@@ -16,30 +16,21 @@ public class SortedArrayStorage extends AbstractArrayStorage {
             storage[size] = r;
             size++;
         } else {
-            String[] uuidSplit = uuid.split("d");
-            int uuidValue = Integer.parseInt(uuidSplit[1]);
-            String[] uuidSplitMax = storage[size - 1].getUuid().split("d");
-            int uuidValueMax = Integer.parseInt(uuidSplitMax[1]);
-            if (uuidValue > uuidValueMax) {
+            int index = -getIndex(uuid) - 1;
+            if (index == size) {
                 storage[size] = r;
                 size++;
-            } else {
-                for (int i = uuidValue; i > 0; i++) {
-                    int index = getIndex("uuid" + i);
-                    if (index >= 0) {
-                        Resume buff1;
-                        Resume buff2 = null;
-                        for (int j = index; j <= size; j++) {
-                            buff1 = storage[j];
-                            storage[j] = buff2;
-                            buff2 = buff1;
-                        }
-                        storage[index] = r;
-                        size++;
-                        return;
-                    }
-                }
+                return;
             }
+            Resume buff1;
+            Resume buff2 = null;
+            for (int j = index; j <= size; j++) {
+                buff1 = storage[j];
+                storage[j] = buff2;
+                buff2 = buff1;
+            }
+            storage[index] = r;
+            size++;
         }
     }
 
