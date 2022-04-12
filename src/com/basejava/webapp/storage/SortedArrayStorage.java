@@ -12,13 +12,8 @@ public class SortedArrayStorage extends AbstractArrayStorage {
             storage[size] = r;
             return;
         }
-        Resume buff1;
-        Resume buff2 = null;
-        for (int j = index; j <= size; j++) {
-            buff1 = storage[j];
-            storage[j] = buff2;
-            buff2 = buff1;
-        }
+        Resume[] storageCopy = Arrays.copyOf(storage, size);
+        System.arraycopy(storageCopy, index, storage, index + 1, size - index);
         storage[index] = r;
     }
 
