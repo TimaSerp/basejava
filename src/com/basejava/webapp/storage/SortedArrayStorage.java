@@ -12,8 +12,7 @@ public class SortedArrayStorage extends AbstractArrayStorage {
             storage[size] = r;
             return;
         }
-        Resume[] storageCopy = Arrays.copyOf(storage, size);
-        System.arraycopy(storageCopy, index, storage, index + 1, size - index);
+        System.arraycopy(storage, index, storage, index + 1, size - index);
         storage[index] = r;
     }
 
