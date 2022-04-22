@@ -4,10 +4,17 @@ import com.basejava.webapp.model.Resume;
 
 public class ArrayStorage extends AbstractArrayStorage {
 
-    public void saveResume(Resume r) {
+    @Override
+    public void insertElement(Resume r) {
         storage[size] = r;
     }
 
+    @Override
+    public void fillDeletedElement(int index) {
+        storage[index] = storage[size - 1];
+    }
+
+    @Override
     protected int getIndex(String uuid) {
         for (int i = 0; i < size; i++) {
             if (uuid.equals(storage[i].getUuid())) {
