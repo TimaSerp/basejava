@@ -94,10 +94,11 @@ abstract class AbstractArrayStorageTest {
 
     @Test
     void delete() throws Exception {
+        storage.delete(UUID_1);
         assertThrows(NotExistStorageException.class, () -> {
-            storage.delete(UUID_1);
             storage.get(UUID_1);
         });
+        assertEquals(2, storage.size());
     }
 
     @Test
@@ -109,9 +110,8 @@ abstract class AbstractArrayStorageTest {
 
     @Test
     void getAll() throws Exception {
-        assertEquals(storage.get(UUID_1), storage.getAll()[0]);
-        assertEquals(storage.get(UUID_2), storage.getAll()[1]);
-        assertEquals(storage.get(UUID_3), storage.getAll()[2]);
+        Resume[] checkArray = new Resume[]{new Resume(UUID_1), new Resume(UUID_2), new Resume(UUID_3)};
+        assertArrayEquals(checkArray, storage.getAll());
     }
 
     @Test
