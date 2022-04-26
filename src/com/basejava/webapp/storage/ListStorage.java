@@ -2,10 +2,10 @@ package com.basejava.webapp.storage;
 
 import com.basejava.webapp.model.Resume;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 public class ListStorage extends AbstractStorage {
-    protected LinkedList<Resume> storage = new LinkedList<>();
+    protected ArrayList<Resume> storage = new ArrayList<>();
 
     public final void clear() {
         storage.clear();
