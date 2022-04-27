@@ -17,26 +17,26 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    public final void updateElement(Resume r, int index) {
+    public final void updateToStorage(Resume r, int index) {
         storage[index] = r;
     }
 
     @Override
-    public final void saveElement(Resume r) {
+    public final void saveToStorage(Resume r) {
         if (size >= STORAGE_LIMIT) {
             throw new StorageException("Storage overflow", r.getUuid());
         }
-        insertElement(r);
+        saveToArray(r);
         size++;
     }
 
     @Override
-    public final Resume getElement(int index) {
+    public final Resume getToStorage(int index) {
         return storage[index];
     }
 
     @Override
-    public final void deleteElement(String uuid, int index) {
+    public final void deleteToStorage(int index) {
         fillDeletedElement(index);
         storage[size - 1] = null;
         size--;
@@ -50,9 +50,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         return size;
     }
 
-    protected abstract int getIndex(String uuid);
-
-    protected abstract void insertElement(Resume r);
+    protected abstract void saveToArray(Resume r);
 
     protected abstract void fillDeletedElement(int index);
 }
