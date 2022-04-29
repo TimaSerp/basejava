@@ -1,5 +1,7 @@
 package com.basejava.webapp.storage;
 
+import com.basejava.webapp.exception.ExistStorageException;
+import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.Resume;
 
@@ -17,8 +19,22 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    public final void updateToStorage(Resume r, int index) {
-        storage[index] = r;
+    public final void checkNotExist(Object searchKey, String uuid){
+        if ((int) searchKey < 0) {
+            throw new NotExistStorageException(uuid);
+        }
+    }
+
+    @Override
+    public final void checkExist(Object searchKey, String uuid){
+        if ((int) searchKey >= 0) {
+            throw new ExistStorageException(uuid);
+        }
+    }
+
+    @Override
+    public final void updateToStorage(Object searchKey, Resume r) {
+        storage[(int) searchKey] = r;
     }
 
     @Override
@@ -31,13 +47,13 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    public final Resume getFromStorage(int index, String uuid) {
-        return storage[index];
+    public final Resume getFromStorage(Object searchKey) {
+        return storage[(int) searchKey];
     }
 
     @Override
-    public final void deleteFromStorage(int index, String uuid) {
-        fillDeletedElement(index);
+    public final void deleteFromStorage(Object searchKey) {
+        fillDeletedElement((int) searchKey);
         storage[size - 1] = null;
         size--;
     }

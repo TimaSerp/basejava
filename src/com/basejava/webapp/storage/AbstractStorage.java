@@ -1,50 +1,43 @@
 package com.basejava.webapp.storage;
 
-import com.basejava.webapp.exception.ExistStorageException;
-import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.model.Resume;
 
 public abstract class AbstractStorage implements Storage{
 
     public void update(Resume r) {
-        int index = getIndex(r.getUuid());
-        if (index < 0) {
-            throw new NotExistStorageException(r.getUuid());
-        }
-        updateToStorage(r, index);
+        Object searchKey = getSearchKey(r.getUuid());
+        checkNotExist(searchKey, r.getUuid());
+        updateToStorage(searchKey, r);
     }
 
     public void save(Resume r) {
-        String uuid = r.getUuid();
-        if (getIndex(uuid) >= 0) {
-            throw new ExistStorageException(uuid);
-        }
+        checkExist(getSearchKey(r.getUuid()), r.getUuid());
         saveToStorage(r);
     }
 
     public Resume get(String uuid) {
-        int index = getIndex(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        }
-        return getFromStorage(index, uuid);
+        Object searchKey = getSearchKey(uuid);
+        checkNotExist(searchKey, uuid);
+        return getFromStorage(searchKey);
     }
 
     public void delete(String uuid) {
-        int index = getIndex(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        }
-        deleteFromStorage(index, uuid);
+        Object searchKey = getSearchKey(uuid);
+        checkNotExist(searchKey, uuid);
+        deleteFromStorage(searchKey);
     }
 
-    protected abstract int getIndex(String uuid);
+    protected abstract void checkNotExist(Object searchKey, String uuid);
 
-    protected abstract void updateToStorage(Resume r, int index);
+    protected abstract void checkExist(Object searchKey, String uuid);
+
+    protected abstract Object getSearchKey(String uuid);
+
+    protected abstract void updateToStorage(Object searchKey, Resume r);
 
     protected abstract void saveToStorage(Resume r);
 
-    protected abstract Resume getFromStorage(int index, String uuid);
+    protected abstract Resume getFromStorage(Object searchKey);
 
-    protected abstract void deleteFromStorage(int index, String uuid);
+    protected abstract void deleteFromStorage(Object searchKey);
 }

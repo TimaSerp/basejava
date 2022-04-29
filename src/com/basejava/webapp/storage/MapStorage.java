@@ -1,5 +1,7 @@
 package com.basejava.webapp.storage;
 
+import com.basejava.webapp.exception.ExistStorageException;
+import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.model.Resume;
 
 import java.util.ArrayList;
@@ -7,15 +9,29 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class MapStorage extends AbstractStorage{
-    protected Map<String, Resume> storage = new LinkedHashMap<>();
+    private Map<String, Resume> storage = new LinkedHashMap<>();
 
     public final void clear() {
         storage.clear();
     }
 
     @Override
-    public final void updateToStorage(Resume r, int index) {
-        storage.replace(r.getUuid(), r);
+    public final void checkNotExist(Object searchKey, String uuid){
+        if (!storage.containsKey(searchKey)) {
+            throw new NotExistStorageException(uuid);
+        }
+    }
+
+    @Override
+    public final void checkExist(Object searchKey, String uuid){
+        if (storage.containsKey(searchKey)) {
+            throw new ExistStorageException(uuid);
+        }
+    }
+
+    @Override
+    public final void updateToStorage(Object searchKey, Resume r) {
+        storage.replace((String) searchKey, r);
     }
 
     @Override
@@ -24,13 +40,13 @@ public class MapStorage extends AbstractStorage{
     }
 
     @Override
-    public final Resume getFromStorage(int index, String uuid) {
-        return storage.get(uuid);
+    public final Resume getFromStorage(Object searchKey) {
+        return storage.get((String) searchKey);
     }
 
     @Override
-    public final void deleteFromStorage(int index, String uuid) {
-        storage.remove(uuid);
+    public final void deleteFromStorage(Object searchKey) {
+        storage.remove((String) searchKey);
     }
 
     public final Resume[] getAll() {
@@ -44,8 +60,7 @@ public class MapStorage extends AbstractStorage{
     }
 
     @Override
-    protected int getIndex(String uuid) {
-        int checkExist = (storage.containsKey(uuid) ? 1 : 0) - 1;
-        return checkExist;
+    protected Object getSearchKey(String uuid) {
+        return uuid;
     }
 }

@@ -1,5 +1,7 @@
 package com.basejava.webapp.storage;
 
+import com.basejava.webapp.exception.ExistStorageException;
+import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.model.Resume;
 
 import java.util.ArrayList;
@@ -13,8 +15,22 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    public final void updateToStorage(Resume r, int index) {
-        storage.set(index, r);
+    public final void checkNotExist(Object searchKey, String uuid){
+        if ((int) searchKey < 0) {
+            throw new NotExistStorageException(uuid);
+        }
+    }
+
+    @Override
+    public final void checkExist(Object searchKey, String uuid){
+        if ((int) searchKey >= 0) {
+            throw new ExistStorageException(uuid);
+        }
+    }
+
+    @Override
+    public final void updateToStorage(Object searchKey, Resume r) {
+        storage.set((int) searchKey, r);
     }
 
     @Override
@@ -23,18 +39,17 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    public final Resume getFromStorage(int index, String uuid) {
-        return storage.get(index);
+    public final Resume getFromStorage(Object searchKey) {
+        return storage.get((int) searchKey);
     }
 
     @Override
-    public final void deleteFromStorage(int index, String uuid) {
-        storage.remove(index);
+    public final void deleteFromStorage(Object searchKey) {
+        storage.remove((int) searchKey);
     }
 
     public final Resume[] getAll() {
-        Resume[] cloneList = new Resume[storage.size()];
-        return storage.toArray(cloneList);
+        return storage.toArray(new Resume[storage.size()]);
     }
 
     public final int size() {
@@ -42,5 +57,5 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected int getIndex(String uuid) { return storage.indexOf(new Resume(uuid)); }
+    protected Object getSearchKey(String uuid) { return storage.indexOf(new Resume(uuid)); }
 }
