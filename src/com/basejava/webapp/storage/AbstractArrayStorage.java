@@ -19,22 +19,8 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    public final void checkNotExist(Object searchKey, String uuid){
-        if ((int) searchKey < 0) {
-            throw new NotExistStorageException(uuid);
-        }
-    }
-
-    @Override
-    public final void checkExist(Object searchKey, String uuid){
-        if ((int) searchKey >= 0) {
-            throw new ExistStorageException(uuid);
-        }
-    }
-
-    @Override
-    public final void updateToStorage(Object searchKey, Resume r) {
-        storage[(int) searchKey] = r;
+    public final void updateToStorage(Object index, Resume r) {
+        storage[(int) index] = r;
     }
 
     @Override
@@ -47,13 +33,13 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    public final Resume getFromStorage(Object searchKey) {
-        return storage[(int) searchKey];
+    public final Resume getFromStorage(Object index) {
+        return storage[(int) index];
     }
 
     @Override
-    public final void deleteFromStorage(Object searchKey) {
-        fillDeletedElement((int) searchKey);
+    public final void deleteFromStorage(Object index) {
+        fillDeletedElement((int) index);
         storage[size - 1] = null;
         size--;
     }

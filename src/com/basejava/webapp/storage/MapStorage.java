@@ -16,22 +16,8 @@ public class MapStorage extends AbstractStorage{
     }
 
     @Override
-    public final void checkNotExist(Object searchKey, String uuid){
-        if (!storage.containsKey(searchKey)) {
-            throw new NotExistStorageException(uuid);
-        }
-    }
-
-    @Override
-    public final void checkExist(Object searchKey, String uuid){
-        if (storage.containsKey(searchKey)) {
-            throw new ExistStorageException(uuid);
-        }
-    }
-
-    @Override
-    public final void updateToStorage(Object searchKey, Resume r) {
-        storage.replace((String) searchKey, r);
+    public final void updateToStorage(Object key, Resume r) {
+        storage.replace((String) key, r);
     }
 
     @Override
@@ -40,13 +26,13 @@ public class MapStorage extends AbstractStorage{
     }
 
     @Override
-    public final Resume getFromStorage(Object searchKey) {
-        return storage.get((String) searchKey);
+    public final Resume getFromStorage(Object key) {
+        return storage.get((String) key);
     }
 
     @Override
-    public final void deleteFromStorage(Object searchKey) {
-        storage.remove((String) searchKey);
+    public final void deleteFromStorage(Object key) {
+        storage.remove((String) key);
     }
 
     public final Resume[] getAll() {
@@ -60,7 +46,10 @@ public class MapStorage extends AbstractStorage{
     }
 
     @Override
-    protected Object getSearchKey(String uuid) {
-        return uuid;
+    protected Object findSearchKey(String uuid) {
+        if (storage.containsKey(uuid)) {
+            return uuid;
+        }
+        return null;
     }
 }

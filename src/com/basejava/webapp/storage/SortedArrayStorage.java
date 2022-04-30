@@ -8,7 +8,7 @@ public class SortedArrayStorage extends AbstractArrayStorage {
 
     @Override
     public void saveToArray(Resume r) {
-        int index = -(int)getSearchKey(r.getUuid()) - 1;
+        int index = -(int) findSearchKey(r.getUuid()) - 1;
         if (index == size) {
             storage[size] = r;
             return;
@@ -23,7 +23,7 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     }
 
     @Override
-    protected Object getSearchKey(String uuid) {
+    protected Object findSearchKey(String uuid) {
         Resume searchKey = new Resume(uuid);
         return Arrays.binarySearch(storage, 0, size, searchKey);
     }
