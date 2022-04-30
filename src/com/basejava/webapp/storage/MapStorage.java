@@ -50,6 +50,6 @@ public class MapStorage extends AbstractStorage{
         if (storage.containsKey(uuid)) {
             return uuid;
         }
-        return null;
+        return "null";
     }
 }

@@ -9,47 +9,44 @@ import java.util.Objects;
 public abstract class AbstractStorage implements Storage {
 
     public void update(Resume r) {
-        Object searchKey = findSearchKey(r.getUuid());
-        checkNotExist(searchKey, r.getUuid());
-        updateToStorage(searchKey, r);
+        updateToStorage(findExistKey(r.getUuid()), r);
     }
 
     public void save(Resume r) {
-        checkExist(findSearchKey(r.getUuid()), r.getUuid());
+        checkExistKey(r.getUuid());
         saveToStorage(r);
     }
 
     public Resume get(String uuid) {
-        Object searchKey = findSearchKey(uuid);
-        checkNotExist(searchKey, uuid);
-        return getFromStorage(searchKey);
+        return getFromStorage(findExistKey(uuid));
     }
 
     public void delete(String uuid) {
-        Object searchKey = findSearchKey(uuid);
-        checkNotExist(searchKey, uuid);
-        deleteFromStorage(searchKey);
+        deleteFromStorage(findExistKey(uuid));
     }
 
-    protected void checkNotExist(Object searchKey, String uuid){
-        boolean checkNotExist;
-        try {
+    protected Object findExistKey(String uuid) {
+        Object searchKey = findSearchKey(uuid);
+        boolean checkNotExist = false;
+        if (searchKey instanceof Integer) {
             checkNotExist = (int) searchKey < 0;
-        } catch (ClassCastException | NullPointerException e) {
-            checkNotExist = Objects.equals(searchKey, null);
+        } else if (searchKey instanceof String) {
+            checkNotExist = Objects.equals(searchKey, "null");
         }
         if (checkNotExist) {
             throw new NotExistStorageException(uuid);
         }
+        return searchKey;
     }
 
 
-    protected void checkExist(Object searchKey, String uuid) {
-        boolean checkExist;
-        try {
+    protected void checkExistKey(String uuid) {
+        Object searchKey = findSearchKey(uuid);
+        boolean checkExist = false;
+        if (searchKey instanceof Integer) {
             checkExist = (int) searchKey >= 0;
-        } catch (ClassCastException | NullPointerException e) {
-            checkExist = !Objects.equals(searchKey, null);
+        } else if (searchKey instanceof String) {
+            checkExist = !Objects.equals(searchKey, "null");
         }
         if (checkExist) {
             throw new ExistStorageException(uuid);
