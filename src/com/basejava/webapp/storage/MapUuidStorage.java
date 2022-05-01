@@ -1,18 +1,23 @@
 package com.basejava.webapp.storage;
 
-import com.basejava.webapp.exception.ExistStorageException;
-import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.model.Resume;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
-public class MapStorage extends AbstractStorage{
+public class MapUuidStorage extends AbstractStorage{
     private Map<String, Resume> storage = new LinkedHashMap<>();
 
     public final void clear() {
         storage.clear();
+    }
+
+    private static final Comparator<Resume> FULLNAME_COMPARATOR = (o1, o2) -> o1.getFullName().compareTo(o2.getFullName());
+    private static final Comparator<Resume> UUID_COMPARATOR = (o1, o2) -> o1.getUuid().compareTo(o2.getUuid());
+    private static final Comparator<Resume> RESUME_COMPARATOR = FULLNAME_COMPARATOR.thenComparing(UUID_COMPARATOR);
+
+    @Override
+    public final boolean isExist (Object key) {
+        return storage.containsKey((String) key);
     }
 
     @Override
@@ -21,8 +26,8 @@ public class MapStorage extends AbstractStorage{
     }
 
     @Override
-    public final void saveToStorage(Resume r) {
-        storage.put(r.getUuid(), r);
+    public final void saveToStorage(Resume r, Object key) {
+        storage.put((String) key, r);
     }
 
     @Override
@@ -35,10 +40,10 @@ public class MapStorage extends AbstractStorage{
         storage.remove((String) key);
     }
 
-    public final Resume[] getAll() {
+    public final List<Resume> getAllSorted() {
         ArrayList<Resume> cloneMap = new ArrayList<>(storage.values());
-        Resume[] cloneList = new Resume[storage.size()];
-        return cloneMap.toArray(cloneList);
+        cloneMap.sort(RESUME_COMPARATOR);
+        return cloneMap;
     }
 
     public final int size() {
@@ -47,9 +52,6 @@ public class MapStorage extends AbstractStorage{
 
     @Override
     protected Object findSearchKey(String uuid) {
-        if (storage.containsKey(uuid)) {
-            return uuid;
-        }
-        return "null";
+        return uuid;
     }
 }

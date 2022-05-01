@@ -3,18 +3,17 @@ package com.basejava.webapp.storage;
 import com.basejava.webapp.model.Resume;
 
 import java.util.Arrays;
+import java.util.Comparator;
 
 public class SortedArrayStorage extends AbstractArrayStorage {
 
+    private static final Comparator<Resume> RESUME_COMPARATOR = (o1, o2) -> o1.getUuid().compareTo(o2.getUuid());
+
     @Override
-    public void saveToArray(Resume r) {
-        int index = -(int) findSearchKey(r.getUuid()) - 1;
-        if (index == size) {
-            storage[size] = r;
-            return;
-        }
-        System.arraycopy(storage, index, storage, index + 1, size - index);
-        storage[index] = r;
+    public void saveToArray(Resume r, int index) {
+        int indexIdx = -index - 1;
+        System.arraycopy(storage, indexIdx, storage, indexIdx + 1, size - indexIdx);
+        storage[indexIdx] = r;
     }
 
     @Override
@@ -25,6 +24,6 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     @Override
     protected Object findSearchKey(String uuid) {
         Resume searchKey = new Resume(uuid);
-        return Arrays.binarySearch(storage, 0, size, searchKey);
+        return Arrays.binarySearch(storage, 0, size, searchKey, RESUME_COMPARATOR);
     }
 }

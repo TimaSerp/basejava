@@ -6,6 +6,9 @@ import com.basejava.webapp.model.Resume;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -13,16 +16,20 @@ abstract class AbstractStorageTest {
     protected final Storage storage;
 
     private static final String UUID_1 = "uuid1";
-    private static final Resume RESUME_1 = new Resume(UUID_1);
+    private static final String FULLNAME_1 = "name1";
+    private static final Resume RESUME_1 = new Resume(UUID_1, FULLNAME_1);
 
     private static final String UUID_2 = "uuid2";
-    private static final Resume RESUME_2 = new Resume(UUID_2);
+    private static final String FULLNAME_2 = "name2";
+    private static final Resume RESUME_2 = new Resume(UUID_2, FULLNAME_2);
 
     private static final String UUID_3 = "uuid3";
-    private static final Resume RESUME_3 = new Resume(UUID_3);
+    private static final String FULLNAME_3 = "name3";
+    private static final Resume RESUME_3 = new Resume(UUID_3, FULLNAME_3);
 
     private static final String UUID_4 = "uuid4";
-    private static final Resume RESUME_4 = new Resume(UUID_4);
+    private static final String FULLNAME_4 = "name4";
+    private static final Resume RESUME_4 = new Resume(UUID_4, FULLNAME_4);
 
     public AbstractStorageTest(Storage storage) {
         this.storage = storage;
@@ -39,7 +46,6 @@ abstract class AbstractStorageTest {
     @Test
     void clear() throws Exception {
         storage.clear();
-        assertEquals(0, storage.getAll().length);
         assertSize(0);
     }
 
@@ -101,9 +107,12 @@ abstract class AbstractStorageTest {
     }
 
     @Test
-    void getAll() throws Exception {
-        Resume[] checkArray = new Resume[]{new Resume(UUID_1), new Resume(UUID_2), new Resume(UUID_3)};
-        assertArrayEquals(checkArray, storage.getAll());
+    void getAllSorted() throws Exception {
+        List<Resume> checkList = new ArrayList<>();
+        checkList.add(RESUME_1);
+        checkList.add(RESUME_2);
+        checkList.add(RESUME_3);
+        assertIterableEquals(checkList, storage.getAllSorted());
     }
 
     @Test
