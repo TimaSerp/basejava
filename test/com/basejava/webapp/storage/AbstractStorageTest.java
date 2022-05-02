@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -108,10 +109,7 @@ abstract class AbstractStorageTest {
 
     @Test
     void getAllSorted() throws Exception {
-        List<Resume> checkList = new ArrayList<>();
-        checkList.add(RESUME_1);
-        checkList.add(RESUME_2);
-        checkList.add(RESUME_3);
+        List<Resume> checkList = Arrays.asList(RESUME_1, RESUME_2, RESUME_3);
         assertIterableEquals(checkList, storage.getAllSorted());
     }
 
