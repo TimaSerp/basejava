@@ -11,10 +11,6 @@ public class MapResumeStorage extends AbstractStorage {
         storage.clear();
     }
 
-    private static final Comparator<Resume> FULLNAME_COMPARATOR = (o1, o2) -> o1.getFullName().compareTo(o2.getFullName());
-    private static final Comparator<Resume> UUID_COMPARATOR = (o1, o2) -> o1.getUuid().compareTo(o2.getUuid());
-    private static final Comparator<Resume> RESUME_COMPARATOR = FULLNAME_COMPARATOR.thenComparing(UUID_COMPARATOR);
-
     @Override
     public final boolean isExist(Object resume) {
         return storage.containsValue(resume);
@@ -40,10 +36,8 @@ public class MapResumeStorage extends AbstractStorage {
         storage.values().remove(resume);
     }
 
-    public final List<Resume> getAllSorted() {
-        ArrayList<Resume> cloneMap = new ArrayList<>(storage.values());
-        cloneMap.sort(RESUME_COMPARATOR);
-        return cloneMap;
+    public final List<Resume> getCopyStorage() {
+        return new ArrayList<>(storage.values());
     }
 
     public final int size() {

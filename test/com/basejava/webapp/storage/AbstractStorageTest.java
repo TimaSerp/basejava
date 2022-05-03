@@ -6,7 +6,6 @@ import com.basejava.webapp.model.Resume;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -73,9 +72,7 @@ abstract class AbstractStorageTest {
 
     @Test
     void saveExist() throws Exception {
-        assertThrows(ExistStorageException.class, () -> {
-            storage.save(RESUME_1);
-        });
+        assertThrows(ExistStorageException.class, () -> storage.save(RESUME_1));
     }
 
     @Test
@@ -86,25 +83,19 @@ abstract class AbstractStorageTest {
 
     @Test
     void getNotExist() throws Exception {
-        assertThrows(NotExistStorageException.class, () -> {
-            storage.get("dummy");
-        });
+        assertThrows(NotExistStorageException.class, () -> storage.get("dummy"));
     }
 
     @Test
     void delete() throws Exception {
         storage.delete(UUID_1);
-        assertThrows(NotExistStorageException.class, () -> {
-            storage.get(UUID_1);
-        });
+        assertThrows(NotExistStorageException.class, () -> storage.get(UUID_1));
         assertSize(2);
     }
 
     @Test
     void deleteNotExist() throws Exception {
-        assertThrows(NotExistStorageException.class, () -> {
-            storage.delete(UUID_4);
-        });
+        assertThrows(NotExistStorageException.class, () -> storage.delete(UUID_4));
     }
 
     @Test

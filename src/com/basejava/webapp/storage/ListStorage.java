@@ -3,7 +3,6 @@ package com.basejava.webapp.storage;
 import com.basejava.webapp.model.Resume;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 public class ListStorage extends AbstractStorage {
@@ -12,10 +11,6 @@ public class ListStorage extends AbstractStorage {
     public final void clear() {
         storage.clear();
     }
-
-    private static final Comparator<Resume> FULLNAME_COMPARATOR = (o1, o2) -> o1.getFullName().compareTo(o2.getFullName());
-    private static final Comparator<Resume> UUID_COMPARATOR = (o1, o2) -> o1.getUuid().compareTo(o2.getUuid());
-    private static final Comparator<Resume> RESUME_COMPARATOR = FULLNAME_COMPARATOR.thenComparing(UUID_COMPARATOR);
 
     @Override
     public final boolean isExist (Object index) {
@@ -41,10 +36,8 @@ public class ListStorage extends AbstractStorage {
         storage.remove((int) index);
     }
 
-    public final List<Resume> getAllSorted() {
-        List<Resume> copyStorage = storage;
-        copyStorage.sort(RESUME_COMPARATOR);
-        return copyStorage;
+    public final List<Resume> getCopyStorage() {
+        return new ArrayList<>(storage);
     }
 
     public final int size() {

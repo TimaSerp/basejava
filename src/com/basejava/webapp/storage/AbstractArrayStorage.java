@@ -11,10 +11,6 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
     protected static int size = 0;
 
-    private static final Comparator<Resume> FULLNAME_COMPARATOR = (o1, o2) -> o1.getFullName().compareTo(o2.getFullName());
-    private static final Comparator<Resume> UUID_COMPARATOR = (o1, o2) -> o1.getUuid().compareTo(o2.getUuid());
-    private static final Comparator<Resume> RESUME_COMPARATOR = FULLNAME_COMPARATOR.thenComparing(UUID_COMPARATOR);
-
     public final void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
@@ -51,10 +47,9 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         size--;
     }
 
-    public List<Resume> getAllSorted() {
+    public List<Resume> getCopyStorage() {
         List<Resume> copyStorage = new ArrayList<>();
         Collections.addAll(copyStorage, Arrays.copyOf(storage, size));
-        copyStorage.sort(RESUME_COMPARATOR);
         return copyStorage;
     }
 
