@@ -4,7 +4,7 @@ import com.basejava.webapp.model.Resume;
 
 import java.util.*;
 
-public class MapResumeStorage extends AbstractStorage {
+public class MapResumeStorage extends AbstractStorage<Resume> {
     private Map<String, Resume> storage = new LinkedHashMap<>();
 
     public final void clear() {
@@ -12,27 +12,27 @@ public class MapResumeStorage extends AbstractStorage {
     }
 
     @Override
-    public final boolean isExist(Object resume) {
-        return storage.containsValue(resume);
+    public final boolean isExist(Resume resume) {
+        return resume != null;
     }
 
     @Override
-    public final void updateToStorage(Object resume, Resume r) {
-        storage.replace(((Resume) resume).getUuid(), r);
+    public final void updateToStorage(Resume resume, Resume r) {
+        storage.replace(resume.getUuid(), r);
     }
 
     @Override
-    public final void saveToStorage(Resume r, Object resume) {
-        storage.put(((Resume) resume).getUuid(), r);
+    public final void saveToStorage(Resume r, Resume resume) {
+        storage.put(r.getUuid(), r);
     }
 
     @Override
-    public final Resume getFromStorage(Object resume) {
-        return storage.get(((Resume) resume).getUuid());
+    public final Resume getFromStorage(Resume resume) {
+        return storage.get(resume.getUuid());
     }
 
     @Override
-    public final void deleteFromStorage(Object resume) {
+    public final void deleteFromStorage(Resume resume) {
         storage.values().remove(resume);
     }
 
@@ -45,7 +45,7 @@ public class MapResumeStorage extends AbstractStorage {
     }
 
     @Override
-    protected Object findSearchKey(String uuid) {
-        return new Resume(uuid);
+    protected Resume findSearchKey(String uuid) {
+        return storage.get(uuid);
     }
 }

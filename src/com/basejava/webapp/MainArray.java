@@ -31,7 +31,7 @@ public class MainArray {
                 uuid = params[1].intern();
             } else if (params.length > 3) {
                 uuid = params[1].intern();
-                fullName = (params[2] + params[3] + params[4]).intern();
+                fullName = (params[2] + " " + params[3] + " " + params[4]).intern();
             }
             switch (params[0]) {
                 case "list":

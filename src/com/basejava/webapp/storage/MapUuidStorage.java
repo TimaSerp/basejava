@@ -4,7 +4,7 @@ import com.basejava.webapp.model.Resume;
 
 import java.util.*;
 
-public class MapUuidStorage extends AbstractStorage{
+public class MapUuidStorage extends AbstractStorage<String> {
     private Map<String, Resume> storage = new LinkedHashMap<>();
 
     public final void clear() {
@@ -12,28 +12,28 @@ public class MapUuidStorage extends AbstractStorage{
     }
 
     @Override
-    public final boolean isExist (Object key) {
-        return storage.containsKey((String) key);
+    public final boolean isExist (String key) {
+        return storage.containsKey(key);
     }
 
     @Override
-    public final void updateToStorage(Object key, Resume r) {
-        storage.replace((String) key, r);
+    public final void updateToStorage(String key, Resume r) {
+        storage.replace(key, r);
     }
 
     @Override
-    public final void saveToStorage(Resume r, Object key) {
-        storage.put((String) key, r);
+    public final void saveToStorage(Resume r, String key) {
+        storage.put(key, r);
     }
 
     @Override
-    public final Resume getFromStorage(Object key) {
-        return storage.get((String) key);
+    public final Resume getFromStorage(String key) {
+        return storage.get(key);
     }
 
     @Override
-    public final void deleteFromStorage(Object key) {
-        storage.remove((String) key);
+    public final void deleteFromStorage(String key) {
+        storage.remove(key);
     }
 
     public final List<Resume> getCopyStorage() {
@@ -45,7 +45,7 @@ public class MapUuidStorage extends AbstractStorage{
     }
 
     @Override
-    protected Object findSearchKey(String uuid) {
+    protected String findSearchKey(String uuid) {
         return uuid;
     }
 }

@@ -51,7 +51,7 @@ abstract class AbstractStorageTest {
 
     @Test
     void update() throws Exception {
-        Resume newResume = new Resume(UUID_1);
+        Resume newResume = new Resume(UUID_1, FULLNAME_1);
         storage.update(newResume);
         assertSame(newResume, storage.get(UUID_1));
     }
@@ -101,6 +101,7 @@ abstract class AbstractStorageTest {
     @Test
     void getAllSorted() throws Exception {
         List<Resume> checkList = Arrays.asList(RESUME_1, RESUME_2, RESUME_3);
+        assertEquals(3, checkList.size());
         assertIterableEquals(checkList, storage.getAllSorted());
     }
 

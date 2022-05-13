@@ -5,7 +5,7 @@ import com.basejava.webapp.model.Resume;
 
 import java.util.*;
 
-public abstract class AbstractArrayStorage extends AbstractStorage {
+public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     protected static final int STORAGE_LIMIT = 10000;
 
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
@@ -17,17 +17,17 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    public final boolean isExist (Object index) {
+    public final boolean isExist (Integer index) {
         return (int) index >= 0;
     }
 
     @Override
-    public final void updateToStorage(Object index, Resume r) {
+    public final void updateToStorage(Integer index, Resume r) {
         storage[(int) index] = r;
     }
 
     @Override
-    public final void saveToStorage(Resume r, Object index) {
+    public final void saveToStorage(Resume r, Integer index) {
         if (size >= STORAGE_LIMIT) {
             throw new StorageException("Storage overflow", r.getUuid());
         }
@@ -36,21 +36,19 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    public final Resume getFromStorage(Object index) {
+    public final Resume getFromStorage(Integer index) {
         return storage[(int) index];
     }
 
     @Override
-    public final void deleteFromStorage(Object index) {
+    public final void deleteFromStorage(Integer index) {
         fillDeletedElement((int) index);
         storage[size - 1] = null;
         size--;
     }
 
     public List<Resume> getCopyStorage() {
-        List<Resume> copyStorage = new ArrayList<>();
-        Collections.addAll(copyStorage, Arrays.copyOf(storage, size));
-        return copyStorage;
+        return Arrays.asList(Arrays.copyOfRange(storage, 0 ,size));
     }
 
     public int size() {
