@@ -3,10 +3,10 @@ package com.basejava.webapp.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListTextSection extends AbstractSection {
+public class BulletedListSection extends AbstractSection {
     private List<String> textList = new ArrayList<>();
 
-    public ListTextSection(ArrayList<String> textList) {
+    public BulletedListSection(ArrayList<String> textList) {
         this.textList = textList;
     }
 

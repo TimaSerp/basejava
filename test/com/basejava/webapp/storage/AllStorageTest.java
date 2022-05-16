@@ -6,8 +6,6 @@ import com.basejava.webapp.storage.*;
 
 @Suite
 @SelectClasses({
-        AbstractStorageTest.class,
-        AbstractArrayStorageTest.class,
         ArrayStorageTest.class,
         SortedArrayStorageTest.class,
         ListStorageTest.class,

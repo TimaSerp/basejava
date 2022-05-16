@@ -28,7 +28,7 @@ public class MapResumeStorage extends AbstractStorage<Resume> {
 
     @Override
     public final Resume getFromStorage(Resume resume) {
-        return storage.get(resume.getUuid());
+        return resume;
     }
 
     @Override

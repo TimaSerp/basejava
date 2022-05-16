@@ -1,11 +1,12 @@
 package com.basejava.webapp.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Experience extends AbstractSection {
-    private ArrayList<Position> positions = new ArrayList<>();
+    private List<Position> positions;
 
-    public Experience (ArrayList<Position> positions) {
+    public Experience(ArrayList<Position> positions) {
         this.positions = positions;
     }
 

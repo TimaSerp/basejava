@@ -1,31 +1,28 @@
 package com.basejava.webapp.model;
 
-import sun.swing.SwingUtilities2;
-
-import java.sql.SQLOutput;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 
+import static com.basejava.webapp.model.ContactType.*;
+import static com.basejava.webapp.model.SectionType.*;
 import static java.time.LocalTime.now;
 
 public class ResumeTestData {
     public static void main(String[] args) {
         Resume kislin = new Resume("Григорий Кислин");
 
-        HashMap<ContactType, String> contacts = new HashMap<>();
-        contacts.put(ContactType.PHONE_NUMBER, "+7(921) 855-0482");
-        contacts.put(ContactType.SKYPE, "grigory.kislin");
-        contacts.put(ContactType.EMAIL, "gkislin@yandex.ru");
-        contacts.put(ContactType.LINKEDIN, "https://www.linkedin.com/in/gkislin");
-        contacts.put(ContactType.GITHUB, "https://github.com/gkislin");
-        contacts.put(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/548473");
-        contacts.put(ContactType.HOME_PAGE, "http://gkislin.ru/");
-        kislin.setContacts(contacts);
+        kislin.addContact(PHONE_NUMBER, "+7(921) 855-0482");
+        kislin.addContact(SKYPE, "grigory.kislin");
+        kislin.addContact(EMAIL, "gkislin@yandex.ru");
+        kislin.addContact(LINKEDIN, "https://www.linkedin.com/in/gkislin");
+        kislin.addContact(GITHUB, "https://github.com/gkislin");
+        kislin.addContact(STACKOVERFLOW, "https://stackoverflow.com/users/548473");
+        kislin.addContact(HOME_PAGE, "http://gkislin.ru/");
 
-        OneTextSection personal = new OneTextSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры.");
+        SimpleLineSection personal = new SimpleLineSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры.");
 
-        OneTextSection objective = new OneTextSection("Ведущий стажировок и корпоративного обучения по Java" +
+        SimpleLineSection objective = new SimpleLineSection("Ведущий стажировок и корпоративного обучения по Java" +
                 " Web и Enterprise технологиям");
 
         ArrayList<String> achievementList = new ArrayList<>();
@@ -48,7 +45,7 @@ public class ResumeTestData {
                 "по JMX (Jython/ Django).");
         achievementList.add("Реализация протоколов по приему платежей всех основных платежных системы России (Cyberplat, " +
                 "Eport, Chronopay, Сбербанк), Белоруcсии(Erip, Osmp) и Никарагуа.");
-        ListTextSection achievement = new ListTextSection(achievementList);
+        BulletedListSection achievement = new BulletedListSection(achievementList);
 
         ArrayList<String> qualificationsList = new ArrayList<>();
         qualificationsList.add("JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2");
@@ -67,7 +64,7 @@ public class ResumeTestData {
         qualificationsList.add("администрирование Hudson/Jenkins, Ant + custom task, SoapUI, JPublisher, Flyway, Nagios, iReport, OpenCmis, Bonita, pgBouncer");
         qualificationsList.add("Отличное знание и опыт применения концепций ООП, SOA, шаблонов проектрирования, архитектурных шаблонов, UML, функционального программирования");
         qualificationsList.add("Родной русский, английский \"upper intermediate\"");
-        ListTextSection qualifications = new ListTextSection(qualificationsList);
+        BulletedListSection qualifications = new BulletedListSection(qualificationsList);
 
         ArrayList<Position> experienceList = new ArrayList<>();
         experienceList.add(new Position(LocalDate.of(2013, 05, 01), LocalDate.now(), "http://javaops.ru/", "Java Online Projects", "Автор проекта.",
@@ -76,9 +73,9 @@ public class ResumeTestData {
                 "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring, " +
                         "MyBatis, Guava, Vaadin, PostgreSQL, Redis). Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO."));
         experienceList.add(new Position(LocalDate.of(2012, 04, 01), LocalDate.of(2014, 10, 01), " ", "RIT Center", "Java архитектор",
-                        "Организация процесса разработки системы ERP для разных окружений: релизная политика, версионирование, ведение CI (Jenkins), миграция базы (кастомизация Flyway), конфигурирование системы (pgBoucer, Nginx), AAA via SSO. " +
-                                "Архитектура БД и серверной части системы. Разработка интергационных сервисов: CMIS, BPMN2, 1C (WebServices), сервисов общего назначения (почта, экспорт в pdf, doc, html). Интеграция Alfresco JLAN для online редактирование из " +
-                                "браузера документов MS Office. Maven + plugin development, Ant, Apache Commons, Spring security, Spring MVC, Tomcat,WSO2, xcmis, OpenCmis, Bonita, Python scripting, Unix shell remote scripting via ssh tunnels, PL/Python"));
+                "Организация процесса разработки системы ERP для разных окружений: релизная политика, версионирование, ведение CI (Jenkins), миграция базы (кастомизация Flyway), конфигурирование системы (pgBoucer, Nginx), AAA via SSO. " +
+                        "Архитектура БД и серверной части системы. Разработка интергационных сервисов: CMIS, BPMN2, 1C (WebServices), сервисов общего назначения (почта, экспорт в pdf, doc, html). Интеграция Alfresco JLAN для online редактирование из " +
+                        "браузера документов MS Office. Maven + plugin development, Ant, Apache Commons, Spring security, Spring MVC, Tomcat,WSO2, xcmis, OpenCmis, Bonita, Python scripting, Unix shell remote scripting via ssh tunnels, PL/Python"));
         experienceList.add(new Position(LocalDate.of(2010, 12, 01), LocalDate.of(2012, 04, 01), "http://www.luxoft.ru/", "Luxoft(Deutsche Bank)", "Ведущий программист",
                 "Участие в проекте Deutsche Bank CRM (WebLogic, Hibernate, Spring, Spring MVC, SmartGWT, GWT, Jasper, " +
                         "Oracle). Реализация клиентской и серверной части CRM. Реализация RIA-приложения для администрирования, мониторинга " +
@@ -91,14 +88,12 @@ public class ResumeTestData {
         educationList.add(new Position(LocalDate.of(2005, 01, 01), LocalDate.of(2005, 04, 01), "http://www.siemens.ru/", "Siemens AG", "3 месяца обучения мобильным IN сетям (Берлин)", ""));
         Experience education = new Experience(educationList);
 
-        HashMap<SectionType, AbstractSection> sections = new HashMap<>();
-        sections.put(SectionType.PERSONAL, personal);
-        sections.put(SectionType.OBJECTIVE, objective);
-        sections.put(SectionType.ACHIEVEMENT, achievement);
-        sections.put(SectionType.QUALIFICATIONS, qualifications);
-        sections.put(SectionType.EXPERIENCE, experience);
-        sections.put(SectionType.EDUCATION, education);
-        kislin.setSections(sections);
-        System.out.println(kislin.getResume());
+        kislin.addSection(PERSONAL, personal);
+        kislin.addSection(OBJECTIVE, objective);
+        kislin.addSection(ACHIEVEMENT, achievement);
+        kislin.addSection(QUALIFICATIONS, qualifications);
+        kislin.addSection(EXPERIENCE, experience);
+        kislin.addSection(EDUCATION, education);
+        System.out.println(kislin.toString());
     }
 }

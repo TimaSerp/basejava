@@ -1,9 +1,9 @@
 package com.basejava.webapp.model;
 
-public class OneTextSection extends AbstractSection {
+public class SimpleLineSection extends AbstractSection {
     private String sectionText;
 
-    public OneTextSection(String sectionText) {
+    public SimpleLineSection(String sectionText) {
         this.sectionText = sectionText;
     }
 

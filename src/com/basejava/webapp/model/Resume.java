@@ -1,16 +1,13 @@
 package com.basejava.webapp.model;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 public class Resume implements Comparable<Resume> {
     private final String uuid;
     private final String fullName;
 
-    private HashMap<ContactType, String> contacts;
-    private HashMap<SectionType, AbstractSection> sections;
+    private Map<ContactType, String> contacts = new EnumMap<ContactType, String>(ContactType.class);
+    private Map<SectionType, AbstractSection> sections = new EnumMap<SectionType, AbstractSection>(SectionType.class);
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
@@ -31,20 +28,20 @@ public class Resume implements Comparable<Resume> {
         return fullName;
     }
 
-    public HashMap<ContactType, String> getContacts() {
+    public Map<ContactType, String> getContacts() {
         return contacts;
     }
 
-    public void setContacts(HashMap<ContactType, String> contacts) {
-        this.contacts = contacts;
+    public void addContact(ContactType contactType, String contact) {
+        contacts.put(contactType, contact);
     }
 
-    public HashMap<SectionType, AbstractSection> getSections() {
+    public Map<SectionType, AbstractSection> getSections() {
         return sections;
     }
 
-    public void setSections(HashMap<SectionType, AbstractSection> sections) {
-        this.sections = sections;
+    public void addSection(SectionType sectionType, AbstractSection section) {
+        sections.put(sectionType, section);
     }
 
     @Override
@@ -54,29 +51,25 @@ public class Resume implements Comparable<Resume> {
 
         Resume resume = (Resume) o;
 
-        if (!fullName.equals(resume.fullName)) return false;
-        return uuid.equals(resume.uuid);
+        if (uuid != null ? !uuid.equals(resume.uuid) : resume.uuid != null) return false;
+        if (fullName != null ? !fullName.equals(resume.fullName) : resume.fullName != null) return false;
+        if (contacts != null ? !contacts.equals(resume.contacts) : resume.contacts != null) return false;
+        if (sections != null ? !sections.equals(resume.sections) : resume.sections != null) return false;
+
+        return true;
     }
 
     @Override
     public int hashCode() {
-        int result = uuid.hashCode();
-        result = 31 * result + fullName.hashCode();
+        int result = uuid != null ? uuid.hashCode() : 0;
+        result = 31 * result + (fullName != null ? fullName.hashCode() : 0);
+        result = 31 * result + (contacts != null ? contacts.hashCode() : 0);
+        result = 31 * result + (sections != null ? sections.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
-        return uuid + " (" + fullName + ")";
-    }
-
-    @Override
-    public int compareTo(Resume o) {
-        int cmp = fullName.compareTo(o.fullName);
-        return cmp != 0 ? cmp : uuid.compareTo(o.uuid);
-    }
-
-    public String getResume() {
         StringBuilder sb = new StringBuilder();
         sb.append(fullName + "\n");
         for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
@@ -86,5 +79,11 @@ public class Resume implements Comparable<Resume> {
             sb.append(entry.getKey().getTitle() + "\n" + entry.getValue().toString());
         }
         return sb.toString();
+    }
+
+    @Override
+    public int compareTo(Resume o) {
+        int cmp = fullName.compareTo(o.fullName);
+        return cmp != 0 ? cmp : uuid.compareTo(o.uuid);
     }
 }
