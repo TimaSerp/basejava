@@ -2,7 +2,6 @@ package com.basejava.webapp.model;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
 
 import static com.basejava.webapp.model.ContactType.*;
 import static com.basejava.webapp.model.SectionType.*;
@@ -10,15 +9,19 @@ import static java.time.LocalTime.now;
 
 public class ResumeTestData {
     public static void main(String[] args) {
-        Resume kislin = new Resume("Григорий Кислин");
+        fillResume("11223", "Григорий Кислин");
+    }
+    
+    public static Resume fillResume(String uuid, String fullName) {
+        Resume newResume = new Resume(uuid, fullName);
 
-        kislin.addContact(PHONE_NUMBER, "+7(921) 855-0482");
-        kislin.addContact(SKYPE, "grigory.kislin");
-        kislin.addContact(EMAIL, "gkislin@yandex.ru");
-        kislin.addContact(LINKEDIN, "https://www.linkedin.com/in/gkislin");
-        kislin.addContact(GITHUB, "https://github.com/gkislin");
-        kislin.addContact(STACKOVERFLOW, "https://stackoverflow.com/users/548473");
-        kislin.addContact(HOME_PAGE, "http://gkislin.ru/");
+        newResume.addContact(PHONE_NUMBER, "+7(921) 855-0482");
+        newResume.addContact(SKYPE, "grigory.newResume");
+        newResume.addContact(EMAIL, "gnewResume@yandex.ru");
+        newResume.addContact(LINKEDIN, "https://www.linkedin.com/in/gnewResume");
+        newResume.addContact(GITHUB, "https://github.com/gnewResume");
+        newResume.addContact(STACKOVERFLOW, "https://stackoverflow.com/users/548473");
+        newResume.addContact(HOME_PAGE, "http://gnewResume.ru/");
 
         SimpleLineSection personal = new SimpleLineSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры.");
 
@@ -66,34 +69,37 @@ public class ResumeTestData {
         qualificationsList.add("Родной русский, английский \"upper intermediate\"");
         BulletedListSection qualifications = new BulletedListSection(qualificationsList);
 
-        ArrayList<Position> experienceList = new ArrayList<>();
-        experienceList.add(new Position(LocalDate.of(2013, 05, 01), LocalDate.now(), "http://javaops.ru/", "Java Online Projects", "Автор проекта.",
+        ArrayList<Organization> experienceList = new ArrayList<>();
+        experienceList.add(new Organization(LocalDate.of(2013, 05, 01), LocalDate.now(), "http://javaops.ru/", "Java Online Projects", "Автор проекта.",
                 "Создание, организация и проведение Java онлайн проектов и стажировок."));
-        experienceList.add(new Position(LocalDate.of(2014, 10, 01), LocalDate.of(2016, 01, 01), "https://www.wrike.com/", "Wrike", "Старший разработчик (backend)",
+        experienceList.add(new Organization(LocalDate.of(2013, 05, 01), LocalDate.now(), "http://javaops.ru/", "Java Online Projects", "Автор проекта.",
+                "Создание, организация и проведение Java онлайн проектов и стажировок."));
+        experienceList.add(new Organization(LocalDate.of(2014, 10, 01), LocalDate.of(2016, 01, 01), "https://www.wrike.com/", "Wrike", "Старший разработчик (backend)",
                 "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring, " +
                         "MyBatis, Guava, Vaadin, PostgreSQL, Redis). Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO."));
-        experienceList.add(new Position(LocalDate.of(2012, 04, 01), LocalDate.of(2014, 10, 01), " ", "RIT Center", "Java архитектор",
+        experienceList.add(new Organization(LocalDate.of(2012, 04, 01), LocalDate.of(2014, 10, 01), " ", "RIT Center", "Java архитектор",
                 "Организация процесса разработки системы ERP для разных окружений: релизная политика, версионирование, ведение CI (Jenkins), миграция базы (кастомизация Flyway), конфигурирование системы (pgBoucer, Nginx), AAA via SSO. " +
                         "Архитектура БД и серверной части системы. Разработка интергационных сервисов: CMIS, BPMN2, 1C (WebServices), сервисов общего назначения (почта, экспорт в pdf, doc, html). Интеграция Alfresco JLAN для online редактирование из " +
                         "браузера документов MS Office. Maven + plugin development, Ant, Apache Commons, Spring security, Spring MVC, Tomcat,WSO2, xcmis, OpenCmis, Bonita, Python scripting, Unix shell remote scripting via ssh tunnels, PL/Python"));
-        experienceList.add(new Position(LocalDate.of(2010, 12, 01), LocalDate.of(2012, 04, 01), "http://www.luxoft.ru/", "Luxoft(Deutsche Bank)", "Ведущий программист",
+        experienceList.add(new Organization(LocalDate.of(2010, 12, 01), LocalDate.of(2012, 04, 01), "http://www.luxoft.ru/", "Luxoft(Deutsche Bank)", "Ведущий программист",
                 "Участие в проекте Deutsche Bank CRM (WebLogic, Hibernate, Spring, Spring MVC, SmartGWT, GWT, Jasper, " +
                         "Oracle). Реализация клиентской и серверной части CRM. Реализация RIA-приложения для администрирования, мониторинга " +
                         "и анализа результатов в области алгоритмического трейдинга. JPA, Spring, Spring-MVC, GWT, ExtGWT (GXT), Highstock, Commet, HTML5."));
         Experience experience = new Experience(experienceList);
 
-        ArrayList<Position> educationList = new ArrayList<>();
-        educationList.add(new Position(LocalDate.of(2013, 03, 01), LocalDate.of(2013, 05, 01), "https://www.coursera.org/course/progfun", "Coursera", "'Functional Programming Principles in Scala' by Martin Odersky", ""));
-        educationList.add(new Position(LocalDate.of(2011, 03, 01), LocalDate.of(2011, 04, 01), "http://www.luxoft-training.ru/training/catalog/course.html?ID=22366", "Luxoft", "Курс 'Объектно-ориентированный анализ ИС. Концептуальное моделирование на UML.'", ""));
-        educationList.add(new Position(LocalDate.of(2005, 01, 01), LocalDate.of(2005, 04, 01), "http://www.siemens.ru/", "Siemens AG", "3 месяца обучения мобильным IN сетям (Берлин)", ""));
+        ArrayList<Organization> educationList = new ArrayList<>();
+        educationList.add(new Organization(LocalDate.of(2013, 03, 01), LocalDate.of(2013, 05, 01), "https://www.coursera.org/course/progfun", "Coursera", "'Functional Programming Principles in Scala' by Martin Odersky", ""));
+        educationList.add(new Organization(LocalDate.of(2011, 03, 01), LocalDate.of(2011, 04, 01), "http://www.luxoft-training.ru/training/catalog/course.html?ID=22366", "Luxoft", "Курс 'Объектно-ориентированный анализ ИС. Концептуальное моделирование на UML.'", ""));
+        educationList.add(new Organization(LocalDate.of(2005, 01, 01), LocalDate.of(2005, 04, 01), "http://www.siemens.ru/", "Siemens AG", "3 месяца обучения мобильным IN сетям (Берлин)", ""));
         Experience education = new Experience(educationList);
 
-        kislin.addSection(PERSONAL, personal);
-        kislin.addSection(OBJECTIVE, objective);
-        kislin.addSection(ACHIEVEMENT, achievement);
-        kislin.addSection(QUALIFICATIONS, qualifications);
-        kislin.addSection(EXPERIENCE, experience);
-        kislin.addSection(EDUCATION, education);
-        System.out.println(kislin.toString());
+        newResume.addSection(PERSONAL, personal);
+        newResume.addSection(OBJECTIVE, objective);
+        newResume.addSection(ACHIEVEMENT, achievement);
+        newResume.addSection(QUALIFICATIONS, qualifications);
+        newResume.addSection(EXPERIENCE, experience);
+        newResume.addSection(EDUCATION, education);
+        System.out.println(newResume.toString());
+        return newResume;
     }
 }
