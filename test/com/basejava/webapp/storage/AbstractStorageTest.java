@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.basejava.webapp.model.ResumeTestData.fillResume;
+import static com.basejava.webapp.ResumeTestData.fillResume;
 import static org.junit.jupiter.api.Assertions.*;
 
 abstract class AbstractStorageTest {
