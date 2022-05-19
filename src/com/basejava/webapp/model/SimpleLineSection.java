@@ -22,4 +22,17 @@ public class SimpleLineSection extends AbstractSection {
     public String toString() {
         return (sectionText + "\n");
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SimpleLineSection that = (SimpleLineSection) o;
+        return Objects.equals(sectionText, that.sectionText);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(sectionText);
+    }
 }
