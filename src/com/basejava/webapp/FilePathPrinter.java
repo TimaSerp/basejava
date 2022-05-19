@@ -10,10 +10,14 @@ public class FilePathPrinter {
 
     public static void doRecursion(File file) {
         if (file.isDirectory()) {
-            if (file.list().length != 0) {
-                for (File f : file.listFiles()) {
-                    doRecursion(f);
+            try {
+                if (file.list().length != 0) {
+                    for (File f : file.listFiles()) {
+                        doRecursion(f);
+                    }
                 }
+            } catch (NullPointerException e) {
+                throw new RuntimeException("Null pointer exception", e);
             }
         } else {
             System.out.println(file.getName());

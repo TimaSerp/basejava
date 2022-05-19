@@ -13,9 +13,10 @@ public class ListStorage extends AbstractStorage<Integer> {
     }
 
     @Override
-    public final boolean isExist (Integer index) {
+    public final boolean isExist(Integer index) {
         return index != null;
     }
+
     @Override
     public final void updateToStorage(Integer index, Resume r) {
         storage.set(index, r);

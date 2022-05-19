@@ -2,7 +2,10 @@ package com.basejava.webapp.storage;
 
 import com.basejava.webapp.model.Resume;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MapUuidStorage extends AbstractStorage<String> {
     private Map<String, Resume> storage = new LinkedHashMap<>();
@@ -12,7 +15,7 @@ public class MapUuidStorage extends AbstractStorage<String> {
     }
 
     @Override
-    public final boolean isExist (String key) {
+    public final boolean isExist(String key) {
         return storage.containsKey(key);
     }
 

@@ -8,7 +8,7 @@ import static com.basejava.webapp.storage.AbstractArrayStorage.STORAGE_LIMIT;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
-abstract class AbstractArrayStorageTest extends AbstractStorageTest{
+abstract class AbstractArrayStorageTest extends AbstractStorageTest {
     public AbstractArrayStorageTest(Storage storage) {
         super(storage);
     }

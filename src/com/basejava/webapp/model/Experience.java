@@ -31,13 +31,26 @@ public class Experience extends AbstractSection {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for (Organization o: orgs) {
+        for (Organization o : orgs) {
             sb.append(o.getHomePage().getUrl() + " " + o.getHomePage().getName() + "\n");
-            for (Organization.Position post: o.getPositions()) {
+            for (Organization.Position post : o.getPositions()) {
                 sb.append(post.getDateStart() + "-" + post.getDateFinish() + " " + post.getPost() + " " +
                         post.getDefinition() + "\n");
             }
         }
         return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Experience that = (Experience) o;
+        return Objects.equals(orgs, that.orgs);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(orgs);
     }
 }

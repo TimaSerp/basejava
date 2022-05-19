@@ -3,7 +3,8 @@ package com.basejava.webapp.storage;
 import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.Resume;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 
 public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     protected static final int STORAGE_LIMIT = 10000;
@@ -17,13 +18,13 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     }
 
     @Override
-    public final boolean isExist (Integer index) {
-        return (int) index >= 0;
+    public final boolean isExist(Integer index) {
+        return index >= 0;
     }
 
     @Override
     public final void updateToStorage(Integer index, Resume r) {
-        storage[(int) index] = r;
+        storage[index] = r;
     }
 
     @Override
@@ -31,24 +32,24 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
         if (size >= STORAGE_LIMIT) {
             throw new StorageException("Storage overflow", r.getUuid());
         }
-        saveToArray(r, (int) index);
+        saveToArray(r, index);
         size++;
     }
 
     @Override
     public final Resume getFromStorage(Integer index) {
-        return storage[(int) index];
+        return storage[index];
     }
 
     @Override
     public final void deleteFromStorage(Integer index) {
-        fillDeletedElement((int) index);
+        fillDeletedElement(index);
         storage[size - 1] = null;
         size--;
     }
 
     public List<Resume> getCopyStorage() {
-        return Arrays.asList(Arrays.copyOfRange(storage, 0 ,size));
+        return Arrays.asList(Arrays.copyOf(storage, size));
     }
 
     public int size() {

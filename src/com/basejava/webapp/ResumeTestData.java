@@ -1,17 +1,18 @@
-package com.basejava.webapp.model;
+package com.basejava.webapp;
+
+import com.basejava.webapp.model.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 
 import static com.basejava.webapp.model.ContactType.*;
 import static com.basejava.webapp.model.SectionType.*;
-import static java.time.LocalTime.now;
 
 public class ResumeTestData {
     public static void main(String[] args) {
         fillResume("11223", "Григорий Кислин");
     }
-    
+
     public static Resume fillResume(String uuid, String fullName) {
         Resume newResume = new Resume(uuid, fullName);
 

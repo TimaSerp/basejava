@@ -5,7 +5,6 @@ import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.model.Resume;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Logger;
 

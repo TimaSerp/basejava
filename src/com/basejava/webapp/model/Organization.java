@@ -28,7 +28,7 @@ public class Organization {
         positions.add(post);
     }
 
-    public class Position {
+    public static class Position {
         private final LocalDate dateStart;
         private final LocalDate dateFinish;
         private final String post;
@@ -64,26 +64,13 @@ public class Organization {
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
-
             Position position = (Position) o;
-
-            if (dateStart != null ? !dateStart.equals(position.dateStart) : position.dateStart != null) return false;
-            if (dateFinish != null ? !dateFinish.equals(position.dateFinish) : position.dateFinish != null)
-                return false;
-            if (post != null ? !post.equals(position.post) : position.post != null) return false;
-            if (definition != null ? !definition.equals(position.definition) : position.definition != null)
-                return false;
-
-            return true;
+            return Objects.equals(dateStart, position.dateStart) && Objects.equals(dateFinish, position.dateFinish) && Objects.equals(post, position.post) && Objects.equals(definition, position.definition);
         }
 
         @Override
         public int hashCode() {
-            int result = dateStart != null ? dateStart.hashCode() : 0;
-            result = 31 * result + (dateFinish != null ? dateFinish.hashCode() : 0);
-            result = 31 * result + (post != null ? post.hashCode() : 0);
-            result = 31 * result + (definition != null ? definition.hashCode() : 0);
-            return result;
+            return Objects.hash(dateStart, dateFinish, post, definition);
         }
     }
 
@@ -91,19 +78,12 @@ public class Organization {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Organization that = (Organization) o;
-
-        if (homePage != null ? !homePage.equals(that.homePage) : that.homePage != null) return false;
-        if (positions != null ? !positions.equals(that.positions) : that.positions != null) return false;
-
-        return true;
+        return Objects.equals(homePage, that.homePage) && Objects.equals(positions, that.positions);
     }
 
     @Override
     public int hashCode() {
-        int result = homePage != null ? homePage.hashCode() : 0;
-        result = 31 * result + (positions != null ? positions.hashCode() : 0);
-        return result;
+        return Objects.hash(homePage, positions);
     }
 }

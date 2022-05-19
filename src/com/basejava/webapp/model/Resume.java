@@ -1,6 +1,9 @@
 package com.basejava.webapp.model;
 
-import java.util.*;
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
 public class Resume implements Comparable<Resume> {
     private final String uuid;
@@ -48,24 +51,13 @@ public class Resume implements Comparable<Resume> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Resume resume = (Resume) o;
-
-        if (uuid != null ? !uuid.equals(resume.uuid) : resume.uuid != null) return false;
-        if (fullName != null ? !fullName.equals(resume.fullName) : resume.fullName != null) return false;
-        if (contacts != null ? !contacts.equals(resume.contacts) : resume.contacts != null) return false;
-        if (sections != null ? !sections.equals(resume.sections) : resume.sections != null) return false;
-
-        return true;
+        return Objects.equals(uuid, resume.uuid) && Objects.equals(fullName, resume.fullName) && Objects.equals(contacts, resume.contacts) && Objects.equals(sections, resume.sections);
     }
 
     @Override
     public int hashCode() {
-        int result = uuid != null ? uuid.hashCode() : 0;
-        result = 31 * result + (fullName != null ? fullName.hashCode() : 0);
-        result = 31 * result + (contacts != null ? contacts.hashCode() : 0);
-        result = 31 * result + (sections != null ? sections.hashCode() : 0);
-        return result;
+        return Objects.hash(uuid, fullName, contacts, sections);
     }
 
     @Override
