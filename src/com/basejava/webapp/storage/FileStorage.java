@@ -27,19 +27,19 @@ public class FileStorage extends AbstractStorage<File> {
 
     @Override
     protected List<Resume> getCopyStorage() {
-        checkReadError();
         List<Resume> list = new ArrayList<>();
-        for (File file : directory.listFiles()) {
+        for (File file : checkReadError()) {
             list.add(getFromStorage(file));
         }
         return list;
     }
 
-    private void checkReadError() {
+    private File[] checkReadError() {
         File[] files = directory.listFiles();
         if (files == null) {
             throw new StorageException("Directory read error", null);
         }
+        return files;
     }
 
     @Override
@@ -89,15 +89,13 @@ public class FileStorage extends AbstractStorage<File> {
 
     @Override
     public void clear() {
-        checkReadError();
-        for (File file: directory.listFiles()) {
+        for (File file: checkReadError()) {
             deleteFromStorage(file);
         }
     }
 
     @Override
     public int size() {
-        checkReadError();
-        return directory.listFiles().length;
+        return checkReadError().length;
     }
 }
