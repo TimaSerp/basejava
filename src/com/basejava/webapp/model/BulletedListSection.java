@@ -1,23 +1,26 @@
 package com.basejava.webapp.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 public class BulletedListSection extends AbstractSection {
-    private List<String> items = new ArrayList<>();
+    private static final long serialVersionUID = 1L;
 
-    public BulletedListSection(ArrayList<String> items) {
-        this.items = items;
+    private List<String> items;
+
+    public BulletedListSection(String... items) {
+        this(Arrays.asList(items));
     }
 
-    public List<String> getitems() {
-        return items;
-    }
-
-    public void setitems(List<String> items) {
+    public BulletedListSection(List<String> items) {
         Objects.requireNonNull(items, "items must be not null");
         this.items = items;
+    }
+
+    public List<String> getItems() {
+        return items;
     }
 
     @Override

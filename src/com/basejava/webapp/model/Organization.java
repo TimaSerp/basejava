@@ -1,13 +1,30 @@
 package com.basejava.webapp.model;
 
+import com.basejava.webapp.util.DateUtil;
+
+import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class Organization {
+import static com.basejava.webapp.util.DateUtil.NOW;
+import static com.basejava.webapp.util.DateUtil.of;
+
+public class Organization implements Serializable {
     private final Link homePage;
     private List<Position> positions = new ArrayList<>();
+
+    public Organization(String name, String url, Position... positions) {
+        this(new Link(name, url), Arrays.asList(positions));
+    }
+
+    public Organization(Link homePage, List<Position> positions) {
+        this.homePage = homePage;
+        this.positions = positions;
+    }
 
     public Organization(LocalDate dateStart, LocalDate dateFinish, String url,
                         String companyName, String post, String definition) {
@@ -28,11 +45,19 @@ public class Organization {
         positions.add(post);
     }
 
-    public static class Position {
+    public static class Position implements Serializable {
         private final LocalDate dateStart;
         private final LocalDate dateFinish;
         private final String post;
         private final String definition;
+
+        public Position(int startYear, Month startMonth, String post, String definition) {
+            this(of(startYear, startMonth), NOW, post, definition);
+        }
+
+        public Position(int startYear, Month startMonth, int endYear, Month endMonth, String post, String definition) {
+            this(of(startYear, startMonth), of(endYear, endMonth), post, definition);
+        }
 
         public Position(LocalDate dateStart, LocalDate dateFinish, String post, String definition) {
             Objects.requireNonNull(dateStart, "dateStart must be not null");

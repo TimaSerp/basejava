@@ -5,6 +5,8 @@ import org.junit.platform.suite.api.Suite;
 
 @Suite
 @SelectClasses({
+        ObjectStreamPathStorageTest.class,
+        ObjectStreamFileStorageTest.class,
         ArrayStorageTest.class,
         SortedArrayStorageTest.class,
         ListStorageTest.class,

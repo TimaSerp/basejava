@@ -1,13 +1,20 @@
 package com.basejava.webapp.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 public class Experience extends AbstractSection {
+    private static final long serialVersionUID = 1L;
+
     private List<Organization> orgs;
 
-    public Experience(ArrayList<Organization> orgs) {
+    public Experience(Organization orgs) {
+        this(Arrays.asList(orgs));
+    }
+
+    public Experience(List<Organization> orgs) {
         Objects.requireNonNull(orgs, "Organizations must be not null");
         for (int i = 0; i < orgs.toArray().length; i++) {
             Organization o = orgs.get(i);
