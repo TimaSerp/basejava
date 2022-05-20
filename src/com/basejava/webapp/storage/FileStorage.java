@@ -2,6 +2,7 @@ package com.basejava.webapp.storage;
 
 import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.Resume;
+import com.basejava.webapp.storage.serialize_strategy.SerializeStrategy;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -9,8 +10,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class FileStorage extends AbstractStorage<File> {
-    private File directory;
-    private SerializeStrategy serializeStrategy;
+    private final File directory;
+    private final SerializeStrategy serializeStrategy;
 
     protected FileStorage(File directory, SerializeStrategy serializeStrategy) {
         Objects.requireNonNull(directory, "directory must be not null");
@@ -24,22 +25,21 @@ public class FileStorage extends AbstractStorage<File> {
         this.serializeStrategy = serializeStrategy;
     }
 
-    public void setSerializeStrategy(SerializeStrategy serializeStrategy) {
-        this.serializeStrategy = serializeStrategy;
-    }
-
     @Override
     protected List<Resume> getCopyStorage() {
-        File[] files = directory.listFiles();
-        if (files == null) {
-            throw new StorageException("Directory read error", null);
-
-        }
+        checkReadError();
         List<Resume> list = new ArrayList<>();
         for (File file : directory.listFiles()) {
             list.add(getFromStorage(file));
         }
         return list;
+    }
+
+    private void checkReadError() {
+        File[] files = directory.listFiles();
+        if (files == null) {
+            throw new StorageException("Directory read error", null);
+        }
     }
 
     @Override
@@ -89,22 +89,15 @@ public class FileStorage extends AbstractStorage<File> {
 
     @Override
     public void clear() {
-        File[] files = directory.listFiles();
-
-        if (files!= null) {
-            for (File file : files) {
-                deleteFromStorage(file);
-            }
+        checkReadError();
+        for (File file: directory.listFiles()) {
+            deleteFromStorage(file);
         }
     }
 
     @Override
     public int size() {
-        String[] list = directory.list();
-
-        if(list == null) {
-            throw new StorageException("Directory read error", null);
-        }
-        return directory.list().length;
+        checkReadError();
+        return directory.listFiles().length;
     }
 }

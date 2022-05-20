@@ -2,6 +2,7 @@ package com.basejava.webapp.storage;
 
 import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.Resume;
+import com.basejava.webapp.storage.serialize_strategy.SerializeStrategy;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -10,10 +11,11 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 public class PathStorage extends AbstractStorage<Path> {
-    private Path directory;
-    private SerializeStrategy serializeStrategy;
+    private final Path directory;
+    private final SerializeStrategy serializeStrategy;
 
     protected PathStorage(String dir, SerializeStrategy serializeStrategy) {
         directory = Paths.get(dir);
@@ -21,23 +23,24 @@ public class PathStorage extends AbstractStorage<Path> {
         if (!Files.isDirectory(directory) || !Files.isWritable(directory)) {
             throw new IllegalArgumentException(directory + " is not directory or not writable");
         }
-        this.directory = directory;
-        this.serializeStrategy = serializeStrategy;
-    }
-
-    public void setSerializeStrategy(SerializeStrategy serializeStrategy) {
         this.serializeStrategy = serializeStrategy;
     }
 
     @Override
     protected List<Resume> getCopyStorage() {
         List<Resume> list = new ArrayList<>();
+        checkReadError().forEach(path -> list.add(getFromStorage(path)));
+        return list;
+    }
+
+    private Stream<Path> checkReadError() {
+        Stream<Path> paths = null;
         try {
-            Files.list(directory).forEach(path -> list.add(getFromStorage(path)));
+            paths = Files.list(directory);
         } catch (IOException e) {
             throw new StorageException("Directory read error", null);
         }
-        return list;
+        return paths;
     }
 
     @Override
@@ -47,7 +50,7 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     protected Path findSearchKey(String uuid) {
-        return new File(directory.toFile(), uuid).toPath();
+        return directory.resolve(uuid);
     }
 
     @Override
@@ -89,11 +92,7 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     public void clear() {
-        try {
-            Files.list(directory).forEach(this::deleteFromStorage);
-        } catch (IOException e) {
-            throw new StorageException("Path delete error", null);
-        }
+        checkReadError().forEach(this::deleteFromStorage);
     }
 
     @Override
