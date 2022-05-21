@@ -1,7 +1,11 @@
 package com.basejava.webapp.model;
 
 import com.basejava.webapp.util.DateUtil;
+import com.basejava.webapp.util.LocalDateAdapter;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.Month;
@@ -13,9 +17,12 @@ import java.util.Objects;
 import static com.basejava.webapp.util.DateUtil.NOW;
 import static com.basejava.webapp.util.DateUtil.of;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Organization implements Serializable {
-    private final Link homePage;
+    private Link homePage;
     private List<Position> positions = new ArrayList<>();
+
+    Organization() {}
 
     public Organization(String name, String url, Position... positions) {
         this(new Link(name, url), Arrays.asList(positions));
@@ -45,11 +52,16 @@ public class Organization implements Serializable {
         positions.add(post);
     }
 
+    @XmlAccessorType(XmlAccessType.FIELD)
     public static class Position implements Serializable {
-        private final LocalDate dateStart;
-        private final LocalDate dateFinish;
-        private final String post;
-        private final String definition;
+        @XmlJavaTypeAdapter(LocalDateAdapter.class)
+        private LocalDate dateStart;
+        @XmlJavaTypeAdapter(LocalDateAdapter.class)
+        private LocalDate dateFinish;
+        private String post;
+        private String definition;
+
+        Position() {}
 
         public Position(int startYear, Month startMonth, String post, String definition) {
             this(of(startYear, startMonth), NOW, post, definition);
