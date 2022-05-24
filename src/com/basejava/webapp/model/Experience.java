@@ -35,6 +35,10 @@ public class Experience extends AbstractSection {
         this.orgs = orgs;
     }
 
+    public Experience(Link link, Organization.Position position) {
+        super();
+    }
+
     public List<Organization> getOrganizations() {
         return orgs;
     }
@@ -43,9 +47,9 @@ public class Experience extends AbstractSection {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (Organization o : orgs) {
-            sb.append(o.getHomePage().getUrl() + " " + o.getHomePage().getName() + "\n");
+            sb.append(o.getHomePage().getUrl() + ", " + o.getHomePage().getName() + ", ");
             for (Organization.Position post : o.getPositions()) {
-                sb.append(post.getDateStart() + "-" + post.getDateFinish() + " " + post.getPost() + " " +
+                sb.append(post.getDateStart() + "-" + post.getDateFinish() + ", " + post.getPost() + ", " +
                         post.getDefinition() + "\n");
             }
         }
