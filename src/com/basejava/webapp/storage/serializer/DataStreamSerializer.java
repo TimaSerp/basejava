@@ -32,7 +32,8 @@ public class DataStreamSerializer implements StreamSerializer {
     public Resume doRead(InputStream is) throws IOException {
         try (DataInputStream dis = new DataInputStream(is)) {
             Resume r = new Resume(dis.readUTF(), dis.readUTF());
-            for (int i = 0; i < dis.readInt(); i++) {
+            int size = dis.readInt();
+            for (int i = 0; i < size; i++) {
                 ContactType contactType = ContactType.valueOf(dis.readUTF());
                 String name = dis.readUTF();
                 r.addContact(contactType, name);
@@ -68,33 +69,47 @@ public class DataStreamSerializer implements StreamSerializer {
         dos.writeInt(section.getOrganizations().size());
         for (Organization org : section.getOrganizations()) {
             dos.writeUTF(org.getHomePage().getName());
-            dos.writeUTF(org.getHomePage().getUrl());
+            dos.writeBoolean(org.getHomePage().getUrl() == null);
+            if (!(org.getHomePage().getUrl() == null)) {
+                dos.writeUTF(org.getHomePage().getUrl());
+            }
             dos.writeInt(org.getPositions().size());
             for (Organization.Position pos : org.getPositions()) {
                 writeLocalDate(dos, pos.getDateStart());
                 writeLocalDate(dos, pos.getDateFinish());
                 dos.writeUTF(pos.getPost());
-                dos.writeUTF(pos.getDefinition());
+                dos.writeBoolean(pos.getDefinition() == null);
+                if (!(pos.getDefinition() == null)) {
+                    dos.writeUTF(pos.getDefinition());
+                }
             }
         }
     }
 
     private void readSections(DataInputStream dis, Resume r) throws IOException {
         AbstractSection section = null;
-        for (int i = 0; i < dis.readInt(); i++) {
+        int size = dis.readInt();
+        for (int i = 0; i < size; i++) {
             SectionType sectionType = SectionType.valueOf(dis.readUTF());
-            if (sectionType.ordinal() <= 1) {
-                section = new SimpleLineSection(dis.readUTF());
-            }
-            if (sectionType.ordinal() == 2 || sectionType.ordinal() == 3) {
-                List<String> lines = new ArrayList<>();
-                for (int j = 0; j < dis.readInt(); j++) {
-                    lines.add(dis.readUTF());
-                }
-                section = new BulletedListSection(lines);
-            }
-            if (sectionType.ordinal() >= 4) {
-                section = new Experience(readExperience(dis));
+            switch(sectionType) {
+                case PERSONAL:
+                case OBJECTIVE:
+                    section = new SimpleLineSection(dis.readUTF());
+                    break;
+                case ACHIEVEMENT:
+                case QUALIFICATIONS:
+                    List<String> lines = new ArrayList<>();
+                    int size2 = dis.readInt();
+                    for (int j = 0; j < size2; j++) {
+                        lines.add(dis.readUTF());
+                    }
+                    section = new BulletedListSection(lines);
+                    break;
+                case EDUCATION:
+                case EXPERIENCE:
+                    section = new Experience(readExperience(dis));
+                    break;
+                default:
             }
             r.addSection(sectionType, section);
         }
@@ -102,15 +117,17 @@ public class DataStreamSerializer implements StreamSerializer {
 
     private List<Organization> readExperience(DataInputStream dis) throws IOException {
         List<Organization> orgs = new ArrayList<>();
-        for (int j = 0; j < dis.readInt(); j++) {
+        int size = dis.readInt();
+        for (int j = 0; j < size; j++) {
             String name = dis.readUTF();
-            String url = dis.readUTF();
+            String url = dis.readBoolean() ? null : dis.readUTF();
             List<Organization.Position> posts = new ArrayList<>();
-            for (int k = 0; k < dis.readInt(); k++) {
+            int size2 = dis.readInt();
+            for (int k = 0; k < size2; k++) {
                 LocalDate dateStart = readLocalDate(dis);
                 LocalDate dateFinish = readLocalDate(dis);
                 String post = dis.readUTF();
-                String definition = dis.readUTF();
+                String definition = dis.readBoolean() ? null : dis.readUTF();
                 posts.add(new Organization.Position(dateStart, dateFinish, post, definition));
             }
             orgs.add(new Organization(new Link(name, url), posts));
@@ -121,9 +138,10 @@ public class DataStreamSerializer implements StreamSerializer {
     private void writeLocalDate(DataOutputStream dos, LocalDate ld) throws IOException {
         dos.writeInt(ld.getYear());
         dos.writeInt(ld.getMonthValue());
+        dos.writeInt(ld.getDayOfMonth());
     }
 
     private LocalDate readLocalDate(DataInputStream dis) throws IOException {
-        return LocalDate.of(dis.readInt(), dis.readInt(), 1);
+        return LocalDate.of(dis.readInt(), dis.readInt(), dis.readInt());
     }
 }

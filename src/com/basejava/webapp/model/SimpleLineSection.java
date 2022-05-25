@@ -22,7 +22,7 @@ public class SimpleLineSection extends AbstractSection {
 
     @Override
     public String toString() {
-        return (sectionText + "\n");
+        return (sectionText);
     }
 
     @Override

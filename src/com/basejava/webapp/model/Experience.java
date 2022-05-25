@@ -20,7 +20,7 @@ public class Experience extends AbstractSection {
 
     public Experience(List<Organization> orgs) {
         Objects.requireNonNull(orgs, "Organizations must be not null");
-        for (int i = 0; i < orgs.toArray().length; i++) {
+        for (int i = 0; i < orgs.size(); i++) {
             Organization o = orgs.get(i);
             orgs.remove(o);
             for (int j = 0; j < orgs.toArray().length; j++) {
@@ -30,7 +30,7 @@ public class Experience extends AbstractSection {
                     orgs.remove(o2);
                 }
             }
-            orgs.add(o);
+            orgs.add(i, o);
         }
         this.orgs = orgs;
     }

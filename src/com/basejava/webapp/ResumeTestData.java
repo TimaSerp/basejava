@@ -48,7 +48,7 @@ public class ResumeTestData {
                 "Создание, организация и проведение Java онлайн проектов и стажировок."));
         experienceList.add(new Organization(LocalDate.of(2013, 05, 01), LocalDate.now(), "http://javaops.ru/", "Java Online Projects", "Работник проекта.",
                 "Создание, организация и проведение Java онлайн проектов и стажировок."));
-        experienceList.add(new Organization(LocalDate.of(2014, 10, 01), LocalDate.of(2016, 01, 01), "https://www.wrike.com/", "Wrike", "Старший разработчик (backend)",
+        experienceList.add(new Organization(LocalDate.of(2014, 10, 01), LocalDate.of(2016, 01, 01), null, "Wrike", "Старший разработчик (backend)",
                 "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring, " +
                         "MyBatis, Guava, Vaadin, PostgreSQL, Redis). Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO."));
         Experience experience = new Experience(experienceList);
