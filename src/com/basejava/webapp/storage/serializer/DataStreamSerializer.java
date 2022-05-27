@@ -36,9 +36,10 @@ public class DataStreamSerializer<T> implements StreamSerializer {
                     case EXPERIENCE:
                         writeWithException(((Experience) entry.getValue()).getOrganizations(), dos, org -> {
                             dos.writeUTF(org.getHomePage().getName());
-                            dos.writeBoolean(org.getHomePage().getUrl() == null);
-                            if (!(org.getHomePage().getUrl() == null)) {
-                                dos.writeUTF(org.getHomePage().getUrl());
+                            String url = org.getHomePage().getUrl();
+                            dos.writeBoolean(url == null);
+                            if (!(url == null)) {
+                                dos.writeUTF(url);
                             }
                             writeWithException(org.getPositions(), dos, pos -> {
                                 writeLocalDate(dos, pos.getDateStart());
