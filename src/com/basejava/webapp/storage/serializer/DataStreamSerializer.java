@@ -19,23 +19,22 @@ public class DataStreamSerializer<T> implements StreamSerializer {
                 dos.writeUTF(entry.getValue());
             });
             writeWithException(r.getSections().entrySet(), dos, entry -> {
-                dos.writeUTF(entry.getKey().name());
-                switch (entry.getKey()) {
+                SectionType sectionType = entry.getKey();
+                dos.writeUTF(sectionType.name());
+                switch (sectionType) {
                     case PERSONAL:
                     case OBJECTIVE:
-                        dos.writeUTF(entry.getValue().toString());
+                        dos.writeUTF(((SimpleLineSection)entry.getValue()).getSectionText());
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        BulletedListSection section = (BulletedListSection) entry.getValue();
-                        writeWithException(section.getItems(), dos, item -> {
+                        writeWithException(((BulletedListSection) entry.getValue()).getItems(), dos, item -> {
                             dos.writeUTF(item);
                         });
                         break;
                     case EDUCATION:
                     case EXPERIENCE:
-                        Experience experience = (Experience) entry.getValue();
-                        writeWithException(experience.getOrganizations(), dos, org -> {
+                        writeWithException(((Experience) entry.getValue()).getOrganizations(), dos, org -> {
                             dos.writeUTF(org.getHomePage().getName());
                             dos.writeBoolean(org.getHomePage().getUrl() == null);
                             if (!(org.getHomePage().getUrl() == null)) {
@@ -74,8 +73,8 @@ public class DataStreamSerializer<T> implements StreamSerializer {
     public Resume doRead(InputStream is) throws IOException {
         try (DataInputStream dis = new DataInputStream(is)) {
             Resume r = new Resume(dis.readUTF(), dis.readUTF());
-            readWithException(dis, r, (resume) -> resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
-            readWithException(dis, r, (resume) -> {
+            readWithException(dis, () -> r.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
+            readWithException(dis, () -> {
                 SectionType sectionType = SectionType.valueOf(dis.readUTF());
                 AbstractSection section = null;
                 switch (sectionType) {
@@ -85,16 +84,14 @@ public class DataStreamSerializer<T> implements StreamSerializer {
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        List<String> lines = new ArrayList<>();
-                        readWithException(dis, r, (resume1) -> lines.add(dis.readUTF()));
-                        section = new BulletedListSection(lines);
+                        section = new BulletedListSection(readAndGetList(dis, () -> dis.readUTF()));
                         break;
                     case EDUCATION:
                     case EXPERIENCE:
-                        section = new Experience(readAndGetList(dis, r, () -> {
+                        section = new Experience(readAndGetList(dis, () -> {
                             String name = dis.readUTF();
                             String url = dis.readBoolean() ? null : dis.readUTF();
-                            List<Organization.Position> posts = readAndGetList(dis, r, () -> {
+                            List<Organization.Position> posts = readAndGetList(dis, () -> {
                                 LocalDate dateStart = readLocalDate(dis);
                                 LocalDate dateFinish = readLocalDate(dis);
                                 String post = dis.readUTF();
@@ -113,13 +110,13 @@ public class DataStreamSerializer<T> implements StreamSerializer {
 
     @FunctionalInterface
     interface ReaderWithException {
-        void read(Resume r) throws IOException;
+        void read() throws IOException;
     }
 
-    private static void readWithException(DataInputStream dis, Resume r, ReaderWithException reader) throws IOException {
+    private static void readWithException(DataInputStream dis, ReaderWithException reader) throws IOException {
         int size = dis.readInt();
         for (int i = 0; i < size; i++) {
-            reader.read(r);
+            reader.read();
         }
     }
 
@@ -128,11 +125,11 @@ public class DataStreamSerializer<T> implements StreamSerializer {
         T read() throws IOException;
     }
 
-    private static <T> List<T> readAndGetList(DataInputStream dis, Resume r, ListFillingReader reader) throws IOException {
+    private static <T> List<T> readAndGetList(DataInputStream dis, ListFillingReader<T> reader) throws IOException {
         int size = dis.readInt();
         List<T> list = new ArrayList<>();
         for (int i = 0; i < size; i++) {
-            list.add((T) reader.read());
+            list.add(reader.read());
         }
         return list;
     }
