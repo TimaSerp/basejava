@@ -7,26 +7,28 @@ public class Deadlock {
     public static void main(String[] args) {
         Thread thread1 = new Thread(() -> {
             System.out.println("start " + Thread.currentThread().getName());
-            synchronized (lock1) {
-                try {
-                    Thread.sleep(150);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                synchronized (lock2) {}
-            }
+            getDeadLock(lock1, lock2);
             System.out.println("finish " + Thread.currentThread().getName());
         }, "The first Thread");
 
         Thread thread2 = new Thread(() -> {
             System.out.println("start " + Thread.currentThread().getName());
-            synchronized (lock2) {
-                synchronized (lock1) {}
-            }
+            getDeadLock(lock2, lock1);
             System.out.println("finish " + Thread.currentThread().getName());
         }, "The second Thread");
 
         thread1.start();
         thread2.start();
+    }
+
+    private static void getDeadLock(Object firstLock, Object secondLock) {
+        synchronized (firstLock) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            synchronized (secondLock) {}
+        }
     }
 }
