@@ -1,16 +1,19 @@
 package com.basejava.webapp;
 
-import com.basejava.webapp.util.LazySingleton;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class MainConcurrency {
     public static final int THREADS_NUMBER = 10000;
     private static volatile int counter;
-    private static final Object LOCK = new Object();
+    //    private static final Lock lock = new ReentrantLock();
+    private final AtomicInteger atomicCounter = new AtomicInteger();
+    private static final DateTimeFormatter sdf = DateTimeFormatter.ofPattern("dd.MM.yyyy HH.mm.ss");
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, ExecutionException {
         System.out.println(Thread.currentThread().getName());
         Thread thread0 = new Thread() {
             @Override
@@ -23,27 +26,26 @@ public class MainConcurrency {
         System.out.println(thread0.getState());
 
         final MainConcurrency mainConcurrency = new MainConcurrency();
-        List<Thread> threads = new ArrayList<>(THREADS_NUMBER);
+        CountDownLatch latch = new CountDownLatch(THREADS_NUMBER);
+        ExecutorService executorService = Executors.newCachedThreadPool();
         for (int i = 0; i < THREADS_NUMBER; i++) {
-            Thread thread = new Thread(() -> {
+            Future<Integer> future = executorService.submit(() -> {
                 for (int j = 0; j < 100; j++) {
                     mainConcurrency.inc();
+                    System.out.println(sdf.getLocale());
                 }
+                latch.countDown();
+                return counter;
             });
-            thread.start();
-            threads.add(thread);
         }
-        threads.forEach(t -> {
-            try {
-                t.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
-        System.out.println(counter);
+        latch.await(10, TimeUnit.SECONDS);
+        executorService.shutdown();
+        System.out.println(mainConcurrency.atomicCounter.get());
     }
 
-    private synchronized void inc() {
-        counter++;
+    private void inc() {
+        atomicCounter.incrementAndGet();
+//            counter++;
+
     }
 }

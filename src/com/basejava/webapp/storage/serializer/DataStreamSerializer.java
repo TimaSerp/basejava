@@ -85,23 +85,20 @@ public class DataStreamSerializer<T> implements StreamSerializer {
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        section = new BulletedListSection(readAndGetList(dis, () -> dis.readUTF()));
+                        section = new BulletedListSection(readAndGetList(dis, dis::readUTF));
                         break;
                     case EDUCATION:
                     case EXPERIENCE:
-                        section = new Experience(readAndGetList(dis, () -> {
-                            String name = dis.readUTF();
-                            String url = dis.readBoolean() ? null : dis.readUTF();
-                            List<Organization.Position> posts = readAndGetList(dis, () -> {
-                                LocalDate dateStart = readLocalDate(dis);
-                                LocalDate dateFinish = readLocalDate(dis);
-                                String post = dis.readUTF();
-                                String definition = dis.readBoolean() ? null : dis.readUTF();
-                                return new Organization.Position(dateStart, dateFinish, post, definition);
-                            });
-                            return new Organization(new Link(name, url), posts);
-                        }));
+                        section = new Experience(
+                                readAndGetList(dis, () -> new Organization(
+                                        new Link(dis.readUTF(), dis.readBoolean() ? null : dis.readUTF()),
+                                        readAndGetList(dis, () -> new Organization.Position(
+                                                readLocalDate(dis), readLocalDate(dis), dis.readUTF(), dis.readBoolean() ? null : dis.readUTF()
+                                        ))
+                        )));
                         break;
+                    default:
+                        throw new IllegalStateException();
                 }
                 r.addSection(sectionType, section);
             });
@@ -126,7 +123,7 @@ public class DataStreamSerializer<T> implements StreamSerializer {
         T read() throws IOException;
     }
 
-    private static <T> List<T> readAndGetList(DataInputStream dis, ListFillingReader<T> reader) throws IOException {
+    private <T> List<T> readAndGetList(DataInputStream dis, ListFillingReader<T> reader) throws IOException {
         int size = dis.readInt();
         List<T> list = new ArrayList<>();
         for (int i = 0; i < size; i++) {
