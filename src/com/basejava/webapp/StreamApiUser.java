@@ -22,8 +22,7 @@ public class StreamApiUser {
         return Arrays.stream(values)
                 .distinct()
                 .sorted()
-                .reduce(0, (identity, num) -> identity += num * (int) Math.pow(10, Arrays.stream(values).distinct().count()
-                        - Arrays.binarySearch(Arrays.stream(values).distinct().sorted().toArray(), num) - 1));
+                .reduce(0, (identity, num) -> identity * 10 + num);
     }
 
     private static List<Integer> oddOrEven(List<Integer> integers) {
