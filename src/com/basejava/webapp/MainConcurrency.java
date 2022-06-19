@@ -1,8 +1,6 @@
 package com.basejava.webapp;
 
-import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 

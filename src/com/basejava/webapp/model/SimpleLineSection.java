@@ -1,7 +1,5 @@
 package com.basejava.webapp.model;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 import java.util.Objects;
 
 public class SimpleLineSection extends AbstractSection {
@@ -9,7 +7,8 @@ public class SimpleLineSection extends AbstractSection {
 
     private String sectionText;
 
-    SimpleLineSection() {}
+    SimpleLineSection() {
+    }
 
     public SimpleLineSection(String sectionText) {
         Objects.requireNonNull(sectionText, "sectionText must be not null");

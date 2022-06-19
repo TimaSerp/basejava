@@ -24,7 +24,7 @@ public class DataStreamSerializer<T> implements StreamSerializer {
                 switch (sectionType) {
                     case PERSONAL:
                     case OBJECTIVE:
-                        dos.writeUTF(((SimpleLineSection)entry.getValue()).getSectionText());
+                        dos.writeUTF(((SimpleLineSection) entry.getValue()).getSectionText());
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
@@ -95,7 +95,7 @@ public class DataStreamSerializer<T> implements StreamSerializer {
                                         readAndGetList(dis, () -> new Organization.Position(
                                                 readLocalDate(dis), readLocalDate(dis), dis.readUTF(), dis.readBoolean() ? null : dis.readUTF()
                                         ))
-                        )));
+                                )));
                         break;
                     default:
                         throw new IllegalStateException();

@@ -10,7 +10,8 @@ public class Link implements Serializable {
     private String name;
     private String url;
 
-    Link() {}
+    Link() {
+    }
 
     public Link(String name, String url) {
         Objects.requireNonNull(name, "name must not be null");

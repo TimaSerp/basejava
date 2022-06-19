@@ -1,6 +1,5 @@
 package com.basejava.webapp.model;
 
-import com.basejava.webapp.util.DateUtil;
 import com.basejava.webapp.util.LocalDateAdapter;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -22,7 +21,8 @@ public class Organization implements Serializable {
     private Link homePage;
     private List<Position> positions = new ArrayList<>();
 
-    Organization() {}
+    Organization() {
+    }
 
     public Organization(String name, String url, Position... positions) {
         this(new Link(name, url), Arrays.asList(positions));
@@ -61,7 +61,8 @@ public class Organization implements Serializable {
         private String post;
         private String definition;
 
-        Position() {}
+        Position() {
+        }
 
         public Position(int startYear, Month startMonth, String post, String definition) {
             this(of(startYear, startMonth), NOW, post, definition);

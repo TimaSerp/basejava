@@ -20,7 +20,8 @@ public class Resume implements Comparable<Resume>, Serializable {
     private Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
     private Map<SectionType, AbstractSection> sections = new EnumMap<>(SectionType.class);
 
-    Resume() {}
+    Resume() {
+    }
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);

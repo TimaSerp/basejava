@@ -1,6 +1,9 @@
 package com.basejava.webapp;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 public class Config {
@@ -12,10 +15,12 @@ public class Config {
     private String dbUser;
     private String dbPassword;
 
-    public static Config get() { return INSTANCE; }
+    public static Config get() {
+        return INSTANCE;
+    }
 
     private Config() {
-        try(InputStream is = new FileInputStream("./config/resumes.properties")) {
+        try (InputStream is = new FileInputStream("./config/resumes.properties")) {
             props.load(is);
             storageDir = new File(props.getProperty("storage.dir"));
             dbUrl = props.getProperty("db.url");

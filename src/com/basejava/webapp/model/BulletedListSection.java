@@ -1,8 +1,5 @@
 package com.basejava.webapp.model;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -12,7 +9,8 @@ public class BulletedListSection extends AbstractSection {
 
     private List<String> items;
 
-    BulletedListSection() {}
+    BulletedListSection() {
+    }
 
     public BulletedListSection(String... items) {
         this(Arrays.asList(items));
