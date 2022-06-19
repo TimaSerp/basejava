@@ -1,0 +1,17 @@
+CREATE TABLE resume
+(
+    uuid      CHAR(36) PRIMARY KEY NOT NULL,
+    full_name VARCHAR              NOT NULL
+);
+
+CREATE TABLE contacts
+(
+    id          SERIAL,
+    resume_uuid CHAR(36) NOT NULL REFERENCES resume
+        ON UPDATE RESTRICT ON DELETE CASCADE,
+    type        VARCHAR  NOT NULL,
+    value       VARCHAR  NOT NULL
+);
+
+create unique index contacts_uuid_type_index
+    on contacts (resume_uuid, type);
