@@ -40,12 +40,8 @@ public class SqlHelper {
         }
     }
 
-    public static void checkNotExist(String uuid) {
-        if (!doCommandWithExceptionReturnObject("SELECT * FROM resume WHERE uuid=?", ps -> {
-            ps.setString(1, uuid);
-            ResultSet rs = ps.executeQuery();
-            return rs.next();
-        })) {
+    public static void checkNotExist(PreparedStatement ps, String uuid) throws SQLException {
+        if (ps.executeUpdate() == 0) {
             throw new NotExistStorageException(uuid);
         }
     }

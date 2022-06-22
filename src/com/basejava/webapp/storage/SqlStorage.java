@@ -30,11 +30,10 @@ public class SqlStorage implements Storage {
     public void update(Resume r) {
         String uuid = r.getUuid();
         LOG.info("update " + uuid);
-        checkNotExist(uuid);
         doCommandWithExceptionVoid("UPDATE resume r SET full_name=? WHERE uuid=?", ps -> {
             ps.setString(1, r.getFullName());
             ps.setString(2, uuid);
-            ps.execute();
+            checkNotExist(ps, uuid);
         });
     }
 
@@ -71,10 +70,9 @@ public class SqlStorage implements Storage {
     @Override
     public void delete(String uuid) {
         LOG.info("delete " + uuid);
-        checkNotExist(uuid);
         doCommandWithExceptionVoid("DELETE FROM resume r WHERE r.uuid =?", ps -> {
             ps.setString(1, uuid);
-            ps.execute();
+            checkNotExist(ps, uuid);
         });
     }
 
