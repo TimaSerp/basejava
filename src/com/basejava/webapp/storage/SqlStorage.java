@@ -1,9 +1,8 @@
 package com.basejava.webapp.storage;
 
-import com.basejava.webapp.exception.ExistStorageException;
 import com.basejava.webapp.exception.NotExistStorageException;
-import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.Resume;
+import com.basejava.webapp.sql.SqlHelper;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -41,17 +40,11 @@ public class SqlStorage implements Storage {
     public void save(Resume r) {
         String uuid = r.getUuid();
         LOG.info("save " + uuid);
-        try {
-            doCommandWithExceptionVoid("INSERT INTO resume (uuid, full_name) VALUES (?, ?)", ps -> {
-                ps.setString(1, uuid);
-                ps.setString(2, r.getFullName());
-                ps.execute();
-            });
-        } catch (StorageException e) {
-            if (get(r.getUuid()).equals(r)) {
-                throw new ExistStorageException(uuid);
-            }
-        }
+        SqlHelper.doCommandWithExistExceptionVoid("INSERT INTO resume (uuid, full_name) VALUES (?, ?)", uuid, ps -> {
+            ps.setString(1, uuid);
+            ps.setString(2, r.getFullName());
+            ps.execute();
+        });
     }
 
     @Override
@@ -83,7 +76,7 @@ public class SqlStorage implements Storage {
             List<Resume> resumes = new ArrayList<>();
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                resumes.add(get(rs.getString("uuid")));
+                resumes.add(new Resume(rs.getString("uuid"), rs.getString("full_name")));
             }
             return resumes;
         });
@@ -94,7 +87,9 @@ public class SqlStorage implements Storage {
         LOG.info("size");
         return doCommandWithExceptionReturnObject("SELECT COUNT(*) FROM resume", ps -> {
             ResultSet rs = ps.executeQuery();
-            rs.next();
+            if (!rs.next()) {
+                throw new IllegalStateException("return empty result set");
+            }
             return rs.getInt(1);
         });
     }

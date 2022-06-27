@@ -4,7 +4,10 @@ import com.basejava.webapp.exception.ExistStorageException;
 import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.exception.StorageException;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 public class SqlHelper {
     public static ConnectionFactory connectionFactory;
@@ -23,6 +26,14 @@ public class SqlHelper {
             sqlCommander.setCommand(conn.prepareStatement(sqlCommand));
         } catch (SQLException e) {
             throw new StorageException(e);
+        }
+    }
+
+    public static void doCommandWithExistExceptionVoid(String sqlCommand, String uuid, SqlCommander sqlCommander) {
+        try {
+            doCommandWithExceptionVoid(sqlCommand, sqlCommander);
+        } catch (StorageException e) {
+            throw new ExistStorageException(uuid);
         }
     }
 
