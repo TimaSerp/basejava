@@ -88,7 +88,7 @@ public class SqlStorage implements Storage {
         return doCommandWithExceptionReturnObject("SELECT COUNT(*) FROM resume", ps -> {
             ResultSet rs = ps.executeQuery();
             if (!rs.next()) {
-                throw new IllegalStateException("return empty result set");
+                return 0;
             }
             return rs.getInt(1);
         });

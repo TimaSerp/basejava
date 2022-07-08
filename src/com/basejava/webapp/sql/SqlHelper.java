@@ -3,6 +3,7 @@ package com.basejava.webapp.sql;
 import com.basejava.webapp.exception.ExistStorageException;
 import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.exception.StorageException;
+import org.postgresql.util.PSQLException;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -30,10 +31,16 @@ public class SqlHelper {
     }
 
     public static void doCommandWithExistExceptionVoid(String sqlCommand, String uuid, SqlCommander sqlCommander) {
-        try {
-            doCommandWithExceptionVoid(sqlCommand, sqlCommander);
-        } catch (StorageException e) {
-            throw new ExistStorageException(uuid);
+        try (Connection conn = connectionFactory.getConnection()) {
+            sqlCommander.setCommand(conn.prepareStatement(sqlCommand));
+        } catch (SQLException e) {
+            if (e instanceof PSQLException) {
+//                23505	unique_violation exception code
+                if (e.getSQLState().equals("23505")) {
+                    throw new ExistStorageException(uuid);
+                }
+            }
+            throw new StorageException(e);
         }
     }
 
