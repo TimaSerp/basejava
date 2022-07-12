@@ -1,3 +1,6 @@
+DROP TABLE IF EXISTS contacts;
+DROP TABLE IF EXISTS resume;
+
 CREATE TABLE resume
 (
     uuid      CHAR(36) PRIMARY KEY NOT NULL,
@@ -15,3 +18,5 @@ CREATE TABLE contacts
 
 create unique index contacts_uuid_type_index
     on contacts (resume_uuid, type);
+
+GRANT ALL PRIVILEGES ON DATABASE resumes TO postgres;
