@@ -14,52 +14,49 @@ import java.util.List;
  * (just run, no need to understand)
  */
 public class MainArray {
+    private final static Storage SQL_STORAGE = Config.get().getSqlStorage();
     private final static Storage ARRAY_STORAGE = new MapUuidStorage();
 
     public static void main(String[] args) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         Resume r;
         while (true) {
-            System.out.print("Введите одну из команд - (list | save uuid fullName | delete uuid | get uuid | update uuid fullName | clear | exit): ");
+            System.out.print("Введите одну из команд - (list | save fullName | delete uuid | get uuid | update uuid fullName | clear | exit): ");
             String[] params = reader.readLine().trim().toLowerCase().split(" ");
             if (params.length < 1 || params.length > 5) {
                 System.out.println("Неверная команда.");
                 continue;
             }
-            String uuid = null;
-            String fullName = null;
-            if (params.length == 2) {
-                uuid = params[1].intern();
-            } else if (params.length > 3) {
-                uuid = params[1].intern();
-                fullName = (params[2] + " " + params[3] + " " + params[4]).intern();
+            String param = null;
+            if (params.length > 1) {
+                param = params[1].intern();
             }
             switch (params[0]) {
                 case "list":
                     printAll();
                     break;
                 case "size":
-                    System.out.println(ARRAY_STORAGE.size());
+                    System.out.println(SQL_STORAGE.size());
                     break;
                 case "save":
-                    r = new Resume(uuid, fullName);
-                    ARRAY_STORAGE.save(r);
+                    r = new Resume(param);
+                    SQL_STORAGE.save(r);
                     printAll();
                     break;
                 case "update":
-                    r = new Resume(uuid, fullName);
-                    ARRAY_STORAGE.update(r);
+                    r = new Resume(param, params[2]);
+                    SQL_STORAGE.update(r);
                     printAll();
                     break;
                 case "delete":
-                    ARRAY_STORAGE.delete(uuid);
+                    SQL_STORAGE.delete(param);
                     printAll();
                     break;
                 case "get":
-                    System.out.println(ARRAY_STORAGE.get(uuid));
+                    System.out.println(SQL_STORAGE.get(param));
                     break;
                 case "clear":
-                    ARRAY_STORAGE.clear();
+                    SQL_STORAGE.clear();
                     printAll();
                     break;
                 case "exit":
@@ -72,7 +69,7 @@ public class MainArray {
     }
 
     static void printAll() {
-        List<Resume> all = ARRAY_STORAGE.getAllSorted();
+        List<Resume> all = SQL_STORAGE.getAllSorted();
         System.out.println("----------------------------");
         if (all.isEmpty()) {
             System.out.println("Empty");
