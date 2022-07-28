@@ -1,14 +1,11 @@
 package com.basejava.webapp.sql;
 
 import com.basejava.webapp.exception.StorageException;
-import com.basejava.webapp.model.ContactType;
-import com.basejava.webapp.model.Resume;
 import com.basejava.webapp.util.ExceptionUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Map;
 
 import static com.basejava.webapp.util.ExceptionUtil.convertException;
 
@@ -55,15 +52,5 @@ public class SqlHelper {
         } catch (SQLException e) {
             throw new StorageException(e);
         }
-    }
-
-    public void executeContacts(Resume r, PreparedStatement ps) throws SQLException {
-        for (Map.Entry<ContactType, String> e : r.getContacts().entrySet()) {
-            ps.setString(1, e.getKey().name());
-            ps.setString(2, e.getValue());
-            ps.setString(3, r.getUuid());
-            ps.addBatch();
-        }
-        ps.executeBatch();
     }
 }
