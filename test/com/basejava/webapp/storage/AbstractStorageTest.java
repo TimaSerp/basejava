@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import static com.basejava.webapp.ResumeTestData.fillResume;
+import static com.basejava.webapp.storage.ResumeTestData.fillResume;
 import static org.junit.jupiter.api.Assertions.*;
 
 public abstract class AbstractStorageTest {

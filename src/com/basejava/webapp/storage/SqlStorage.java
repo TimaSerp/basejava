@@ -8,6 +8,7 @@ import com.basejava.webapp.sql.SqlHelper;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +39,9 @@ public class SqlStorage implements Storage {
                 if (ps.executeUpdate() == 0) {
                     throw new NotExistStorageException(uuid);
                 }
+            }
+            try (PreparedStatement ps = conn.prepareStatement("DELETE FROM contacts c WHERE c.resume_uuid=?")){
+                ps.setString(1, r.getUuid());
             }
             try (PreparedStatement ps = conn.prepareStatement("UPDATE contacts c SET type=?, value=? WHERE c.type=? AND c.resume_uuid=?")) {
                 for (Map.Entry<ContactType, String> e : r.getContacts().entrySet()) {
@@ -88,13 +92,19 @@ public class SqlStorage implements Storage {
                 throw new NotExistStorageException(uuid);
             }
             Resume r = new Resume(uuid, rs.getString("full_name"));
-            do {
-                ContactType type = ContactType.valueOf(rs.getString("type"));
-                String value = rs.getString("value");
-                r.addContact(type, value);
-            } while (rs.next());
+            executeContacts(rs, r);
             return r;
         });
+    }
+
+    private void executeContacts(ResultSet rs, Resume r) throws SQLException {
+        do {
+            String value = rs.getString("value");
+            if (value != null) {
+                ContactType type = ContactType.valueOf(rs.getString("type"));
+                r.addContact(type, value);
+            }
+        } while (rs.next());
     }
 
     @Override
@@ -116,17 +126,22 @@ public class SqlStorage implements Storage {
         return sqlHelper.execute("SELECT * FROM resume LEFT JOIN contacts c ON resume.uuid=c.resume_uuid ORDER BY full_name, uuid", ps -> {
             List<Resume> resumes = new ArrayList<>();
             ResultSet rs = ps.executeQuery();
+//            Так как все резюме отсортированы, то сначала будет обрабатываться одно резюме, только после полной его обработки следующее.
+//            Из-за этого мы можем сохранять резюме, с которым мы работаем, и в него добавлять контакты, когда резюме меняется,
+//            currentResume тоже меняется.
+            Resume currentResume = new Resume("new");
             while (rs.next()) {
                 Resume newResume = new Resume(rs.getString("uuid"), rs.getString("full_name"));
                 String type = rs.getString("type");
                 String value = rs.getString("value");
-                if (resumes.contains(newResume) && type != null && value != null) {
-                    resumes.get(resumes.indexOf(newResume)).addContact(ContactType.valueOf(type), value);
+                if (currentResume.getUuid().equals(newResume.getUuid()) && value != null) {
+                    currentResume.addContact(ContactType.valueOf(type), value);
                 } else {
-                    if (type != null && value != null) {
+                    if (value != null) {
                         newResume.addContact(ContactType.valueOf(type), value);
                     }
                     resumes.add(newResume);
+                    currentResume = newResume;
                 }
             }
             return resumes;
