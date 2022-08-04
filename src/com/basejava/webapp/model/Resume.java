@@ -76,10 +76,10 @@ public class Resume implements Comparable<Resume>, Serializable {
         StringBuilder sb = new StringBuilder();
         sb.append(fullName + "\n");
         for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
-            sb.append(entry.getKey().getTitle() + entry.getValue() + "\n");
+            sb.append(entry.getKey().getTitle() + "\n" + entry.getValue() + "\n");
         }
         for (Map.Entry<SectionType, AbstractSection> entry : sections.entrySet()) {
-            sb.append(entry.getKey().getTitle() + "\n" + entry.getValue().toString());
+            sb.append(entry.getKey().getTitle() + "\n" + entry.getValue() + "\n");
         }
         return sb.toString();
     }

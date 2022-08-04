@@ -10,7 +10,7 @@ import java.util.Properties;
 
 public class Config {
     private static final Config INSTANCE = new Config();
-    protected static final File PROPS = new File(".\\storage\\resumes.properties");
+    protected static final File PROPS = new File("C:\\Users\\AnTi\\basejava — копия\\config\\resumes.properties");
     private Properties props = new Properties();
     private SqlStorage sqlStorage;
     private File storageDir;
@@ -20,7 +20,7 @@ public class Config {
     }
 
     private Config() {
-        try (InputStream is = new FileInputStream("./config/resumes.properties")) {
+        try (InputStream is = new FileInputStream("C:\\Users\\AnTi\\basejava — копия\\config\\resumes.properties")) {
             props.load(is);
             storageDir = new File(props.getProperty("storage.dir"));
             sqlStorage = new SqlStorage(props.getProperty("db.url"), props.getProperty("db.user"),
