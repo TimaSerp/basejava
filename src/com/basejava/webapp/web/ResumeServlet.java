@@ -13,13 +13,13 @@ import java.io.IOException;
 import java.io.Writer;
 
 public class ResumeServlet extends HttpServlet {
-    private final Storage storage = Config.get().getSqlStorage();
+    private Storage storage;
 
-//    @Override
-//    public void init(ServletConfig config) throws ServletException {
-//        super.init(config);
-//        storage = Config.get().getSqlStorage();
-//    }
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        storage = Config.get().getSqlStorage();
+    }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) {
 

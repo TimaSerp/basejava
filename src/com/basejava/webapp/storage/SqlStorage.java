@@ -18,6 +18,11 @@ public class SqlStorage implements Storage {
 
 
     public SqlStorage(String dbUrl, String dbUser, String dbPassword) {
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         sqlHelper = new SqlHelper(() -> DriverManager.getConnection(dbUrl, dbUser, dbPassword));
     }
 
@@ -80,15 +85,19 @@ public class SqlStorage implements Storage {
             if (!rs.next()) {
                 throw new NotExistStorageException(uuid);
             }
-            Resume r = new Resume(uuid, rs.getString("full_name"));
-            do {
+            return new Resume(uuid, rs.getString("full_name"));
+        });
+        sqlHelper.execute("SELECT * FROM contacts WHERE resume_uuid=?", ps -> {
+            ps.setString(1, uuid);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
                 String value = rs.getString("value");
                 if (value != null) {
                     ContactType type = ContactType.valueOf(rs.getString("type"));
-                    r.addContact(type, value);
+                    resume.addContact(type, value);
                 }
-            } while (rs.next());
-            return r;
+            }
+            return null;
         });
         sqlHelper.execute("SELECT * FROM sections WHERE resume_uuid=?", ps -> {
             ps.setString(1, uuid);
@@ -131,11 +140,7 @@ public class SqlStorage implements Storage {
         });
         executeQualities(CONTACTS, resumes);
         executeQualities(SECTIONS, resumes);
-        List<Resume> resumeList = new ArrayList<>();
-        for (Map.Entry<String, Resume> e: resumes.entrySet()) {
-            resumeList.add(e.getValue());
-        }
-        return resumeList;
+        return new ArrayList<>(resumes.values());
     }
 
     @Override
