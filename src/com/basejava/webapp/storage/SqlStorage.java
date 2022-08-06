@@ -44,15 +44,9 @@ public class SqlStorage implements Storage {
                     throw new NotExistStorageException(uuid);
                 }
             }
-            try (PreparedStatement ps = conn.prepareStatement("DELETE FROM contacts WHERE resume_uuid=?")) {
-                ps.setString(1, r.getUuid());
-                ps.execute();
-            }
+            deleteQuality(r, CONTACTS, conn);
             insertContacts(r, conn);
-            try (PreparedStatement ps = conn.prepareStatement("DELETE FROM sections WHERE resume_uuid=?")) {
-                ps.setString(1, r.getUuid());
-                ps.execute();
-            }
+            deleteQuality(r, SECTIONS, conn);
             insertSections(r, conn);
         });
     }
@@ -75,11 +69,7 @@ public class SqlStorage implements Storage {
     @Override
     public Resume get(String uuid) {
         LOG.info("get " + uuid);
-        Resume resume = sqlHelper.execute("" +
-                "SELECT * FROM resume r " +
-                "LEFT JOIN contacts c " +
-                "ON r.uuid = c.resume_uuid " +
-                "WHERE r.uuid =?", ps -> {
+        Resume resume = sqlHelper.execute("SELECT * FROM resume r WHERE r.uuid =?", ps -> {
             ps.setString(1, uuid);
             ResultSet rs = ps.executeQuery();
             if (!rs.next()) {
@@ -87,30 +77,8 @@ public class SqlStorage implements Storage {
             }
             return new Resume(uuid, rs.getString("full_name"));
         });
-        sqlHelper.execute("SELECT * FROM contacts WHERE resume_uuid=?", ps -> {
-            ps.setString(1, uuid);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                String value = rs.getString("value");
-                if (value != null) {
-                    ContactType type = ContactType.valueOf(rs.getString("type"));
-                    resume.addContact(type, value);
-                }
-            }
-            return null;
-        });
-        sqlHelper.execute("SELECT * FROM sections WHERE resume_uuid=?", ps -> {
-            ps.setString(1, uuid);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                String value = rs.getString("value");
-                if (value != null) {
-                    SectionType type = SectionType.valueOf(rs.getString("type"));
-                    executeSection(type, value, resume);
-                }
-            }
-            return null;
-        });
+        getQualities(resume, uuid, CONTACTS);
+        getQualities(resume, uuid, SECTIONS);
         return resume;
     }
 
@@ -152,6 +120,13 @@ public class SqlStorage implements Storage {
         });
     }
 
+    private void deleteQuality(Resume r, String table, Connection conn) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement("DELETE FROM " + table + " WHERE resume_uuid=?")) {
+            ps.setString(1, r.getUuid());
+            ps.execute();
+        }
+    }
+
     private void insertContacts(Resume r, Connection conn) throws SQLException {
         try (PreparedStatement ps = conn.prepareStatement("INSERT INTO contacts (resume_uuid, type, value) VALUES (?, ?, ?)")) {
             for (Map.Entry<ContactType, String> e : r.getContacts().entrySet()) {
@@ -169,11 +144,31 @@ public class SqlStorage implements Storage {
             for (Map.Entry<SectionType, AbstractSection> e: r.getSections().entrySet()) {
                 ps.setString(1, r.getUuid());
                 ps.setString(2, e.getKey().name());
-                ps.setString(3, e.getValue() + "\n");
+                ps.setString(3, "" + e.getValue());
                 ps.addBatch();
             }
             ps.executeBatch();
         }
+    }
+
+    private void getQualities(Resume r, String uuid, String table) {
+        sqlHelper.execute("SELECT * FROM " + table + " WHERE resume_uuid=?", ps -> {
+            ps.setString(1, uuid);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                String value = rs.getString("value");
+                if (value != null) {
+                    if (table.equals(CONTACTS)) {
+                        ContactType type = ContactType.valueOf(rs.getString("type"));
+                        r.addContact(type, value);
+                    } else if (table.equals(SECTIONS)) {
+                        SectionType type = SectionType.valueOf(rs.getString("type"));
+                        executeSection(type, value, r);
+                    }
+                }
+            }
+            return null;
+        });
     }
 
     private void executeQualities(String table, Map<String, Resume> resumes) {
