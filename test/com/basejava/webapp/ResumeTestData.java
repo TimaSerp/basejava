@@ -1,15 +1,36 @@
-package com.basejava.webapp.storage;
+package com.basejava.webapp;
 
 import com.basejava.webapp.model.BulletedListSection;
 import com.basejava.webapp.model.Resume;
 import com.basejava.webapp.model.SimpleLineSection;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import static com.basejava.webapp.model.ContactType.*;
 import static com.basejava.webapp.model.SectionType.*;
 
 public class ResumeTestData {
+    public static final String UUID_1 = String.valueOf(UUID.randomUUID());
+    public static final String FULLNAME_1 = "name1";
+    public static final Resume RESUME_1 = fillResume(UUID_1, FULLNAME_1);
+//    private static final Resume RESUME_1 = new Resume(UUID_1, FULLNAME_1);
+
+    public static final String UUID_2 = String.valueOf(UUID.randomUUID());
+    public static final String FULLNAME_2 = "name2";
+    public static final Resume RESUME_2 = fillResume(UUID_2, FULLNAME_2);
+//    private static final Resume RESUME_2 = new Resume(UUID_2, FULLNAME_2);
+
+    public static final String UUID_3 = String.valueOf(UUID.randomUUID());
+    public static final String FULLNAME_3 = "name3";
+    public static final Resume RESUME_3 = fillResume(UUID_3, FULLNAME_3);
+//    private static final Resume RESUME_3 = new Resume(UUID_3, FULLNAME_3);
+
+    public static final String UUID_4 = String.valueOf(UUID.randomUUID());
+    public static final String FULLNAME_4 = "name4";
+    public static final Resume RESUME_4 = fillResume(UUID_4, FULLNAME_4);
+    //    private static final Resume RESUME_4 = new Resume(UUID_4, FULLNAME_4);
+
     public static void main(String[] args) {
         fillResume("11223", "Григорий Кислин");
     }

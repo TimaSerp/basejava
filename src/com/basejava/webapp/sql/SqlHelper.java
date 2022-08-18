@@ -36,15 +36,16 @@ public class SqlHelper {
 
     @FunctionalInterface
     public interface SqlTransaction<T> {
-        void execute(Connection conn) throws SQLException;
+        T execute(Connection conn) throws SQLException;
     }
 
-    public <T> void transactionalExecute(SqlTransaction<T> executor) {
+    public <T> T transactionalExecute(SqlTransaction<T> executor) {
         try (Connection conn = connectionFactory.getConnection()) {
             try {
                 conn.setAutoCommit(false);
-                executor.execute(conn);
+                T res = executor.execute(conn);
                 conn.commit();
+                return res;
             } catch (SQLException e) {
                 conn.rollback();
                 throw ExceptionUtil.convertException(e);
