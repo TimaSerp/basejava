@@ -4,10 +4,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -42,8 +39,16 @@ public class Resume implements Comparable<Resume>, Serializable {
         return fullName;
     }
 
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
     public Map<ContactType, String> getContacts() {
         return contacts;
+    }
+
+    public String getContact(ContactType contactType) {
+        return contacts.get(contactType);
     }
 
     public void addContact(ContactType contactType, String contact) {
@@ -52,6 +57,10 @@ public class Resume implements Comparable<Resume>, Serializable {
 
     public Map<SectionType, AbstractSection> getSections() {
         return sections;
+    }
+
+    public AbstractSection getSection(SectionType sectionType) {
+        return sections.get(sectionType);
     }
 
     public void addSection(SectionType sectionType, AbstractSection section) {

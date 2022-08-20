@@ -1,9 +1,8 @@
 package com.basejava.webapp;
 
-import com.basejava.webapp.model.BulletedListSection;
-import com.basejava.webapp.model.Resume;
-import com.basejava.webapp.model.SimpleLineSection;
+import com.basejava.webapp.model.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -64,28 +63,28 @@ public class ResumeTestData {
         qualificationsList.add("JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2");
         qualificationsList.add("Version control: Subversion, Git, Mercury, ClearCase, Perforce");
         BulletedListSection qualifications = new BulletedListSection(qualificationsList);
-//
-//        ArrayList<Organization> experienceList = new ArrayList<>();
-//        experienceList.add(new Organization(LocalDate.of(2013, 05, 01), LocalDate.now(), "http://javaops.ru/", "Java Online Projects", "Автор проекта.",
-//                "Создание, организация и проведение Java онлайн проектов и стажировок."));
-//        experienceList.add(new Organization(LocalDate.of(2013, 05, 01), LocalDate.now(), "http://javaops.ru/", "Java Online Projects", "Работник проекта.",
-//                "Создание, организация и проведение Java онлайн проектов и стажировок."));
-//        experienceList.add(new Organization(LocalDate.of(2014, 10, 01), LocalDate.of(2016, 01, 01), null, "Wrike", "Старший разработчик (backend)",
-//                "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring, " +
-//                        "MyBatis, Guava, Vaadin, PostgreSQL, Redis). Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO."));
-//        Experience experience = new Experience(experienceList);
-//
-//        ArrayList<Organization> educationList = new ArrayList<>();
-//        educationList.add(new Organization(LocalDate.of(2013, 03, 01), LocalDate.of(2013, 05, 01), "https://www.coursera.org/course/progfun", "Coursera", "'Functional Programming Principles in Scala' by Martin Odersky", ""));
-//        educationList.add(new Organization(LocalDate.of(2011, 03, 01), LocalDate.of(2011, 04, 01), "http://www.luxoft-training.ru/training/catalog/course.html?ID=22366", "Luxoft", "Курс 'Объектно-ориентированный анализ ИС. Концептуальное моделирование на UML.'", ""));
-//        Experience education = new Experience(educationList);
-//
+
+        ArrayList<Organization> experienceList = new ArrayList<>();
+        experienceList.add(new Organization(LocalDate.of(2013, 05, 01), LocalDate.now(), "http://javaops.ru/", "Java Online Projects", "Автор проекта.",
+                "Создание, организация и проведение Java онлайн проектов и стажировок."));
+        experienceList.add(new Organization(LocalDate.of(2013, 05, 01), LocalDate.now(), "http://javaops.ru/", "Java Online Projects", "Работник проекта.",
+                "Создание, организация и проведение Java онлайн проектов и стажировок."));
+        experienceList.add(new Organization(LocalDate.of(2014, 10, 01), LocalDate.of(2016, 01, 01), null, "Wrike", "Старший разработчик (backend)",
+                "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring, " +
+                        "MyBatis, Guava, Vaadin, PostgreSQL, Redis). Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO."));
+        Experience experience = new Experience(experienceList);
+
+        ArrayList<Organization> educationList = new ArrayList<>();
+        educationList.add(new Organization(LocalDate.of(2013, 03, 01), LocalDate.of(2013, 05, 01), "https://www.coursera.org/course/progfun", "Coursera", "'Functional Programming Principles in Scala' by Martin Odersky", ""));
+        educationList.add(new Organization(LocalDate.of(2011, 03, 01), LocalDate.of(2011, 04, 01), "http://www.luxoft-training.ru/training/catalog/course.html?ID=22366", "Luxoft", "Курс 'Объектно-ориентированный анализ ИС. Концептуальное моделирование на UML.'", ""));
+        Experience education = new Experience(educationList);
+
         newResume.addSection(PERSONAL, personal);
         newResume.addSection(OBJECTIVE, objective);
         newResume.addSection(ACHIEVEMENT, achievement);
         newResume.addSection(QUALIFICATIONS, qualifications);
-//        newResume.addSection(EXPERIENCE, experience);
-//        newResume.addSection(EDUCATION, education);
+        newResume.addSection(EXPERIENCE, experience);
+        newResume.addSection(EDUCATION, education);
         return newResume;
     }
 }
