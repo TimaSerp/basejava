@@ -25,35 +25,39 @@
             <c:set var="type" value="<%=sectionEntry.getKey()%>"/>
             <c:set var="value" value="<%=sectionEntry.getValue()%>"/>
             <jsp:useBean id="value" type="com.basejava.webapp.model.AbstractSection"/>
-    <P style="text-align: center"><b>${type.title}</b>:</P><br/>
-    <c:if test="${type=='PERSONAL' || type=='OBJECTIVE'}">
-        ${value}<br/>
-    </c:if>
-    <c:if test="${type=='ACHIEVEMENT' || type=='QUALIFICATIONS'}">
-        <ul>
-            <c:forEach var="item" items="<%=((BulletedListSection) sectionEntry.getValue()).getItems()%>">
-                <li>${item}<br/></li>
-            </c:forEach>
-        </ul>
-    </c:if>
-    <c:if test="${type=='EXPERIENCE' || type=='EDUCATION'}">
-        <c:forEach var="org" items="<%=((Experience) value).getOrganizations()%>">
-            <c:if test="${empty org.homePage.url}">
-                ${org.homePage.name}<br/>
+        <c:if test="<%=value != null && value.toString().trim().length() > 0%>">
+            <c:if test="${type=='PERSONAL' || type=='OBJECTIVE'}">
+                <P style="text-align: center"><b>${type.title}</b>:</P>
+                ${value}<br/>
             </c:if>
-            <c:if test="${!empty org.homePage.url}">
-                <a href="${org.homePage.url}">${org.homePage.name}</a><br/>
+            <c:if test="${type=='ACHIEVEMENT' || type=='QUALIFICATIONS'}">
+                <P style="text-align: center"><b>${type.title}</b>:</P>
+                <ul>
+                    <c:forEach var="item" items="<%=((BulletedListSection) sectionEntry.getValue()).getItems()%>">
+                        <li>${item}<br/></li>
+                    </c:forEach>
+                </ul>
             </c:if>
-            <ul>
-                <c:forEach var="pos" items="${org.positions}">
-                    <li>${pos.dateStart} - ${pos.dateFinish}<br/>
-                            ${pos.post}<br/>
-                            ${pos.definition}</li>
-                    <br/>
+            <c:if test="${type=='EXPERIENCE' || type=='EDUCATION'}">
+                <P style="text-align: center"><b>${type.title}</b>:</P>
+                <c:forEach var="org" items="<%=((Experience) value).getOrganizations()%>">
+                    <c:if test="${empty org.homePage.url}">
+                        ${org.homePage.name}<br/>
+                    </c:if>
+                    <c:if test="${!empty org.homePage.url}">
+                        <a href="${org.homePage.url}">${org.homePage.name}</a><br/>
+                    </c:if>
+                    <ul>
+                        <c:forEach var="pos" items="${org.positions}">
+                            <li>${pos.dateStart} - ${pos.dateFinish}<br/>
+                                ${pos.post}<br/>
+                                ${pos.definition}</li>
+                            <br/>
+                        </c:forEach>
+                    </ul>
                 </c:forEach>
-            </ul>
-        </c:forEach>
-    </c:if>
+            </c:if>
+        </c:if>
     </c:forEach>
     <p>
 </section>

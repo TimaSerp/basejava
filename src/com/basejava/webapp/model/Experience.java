@@ -1,5 +1,6 @@
 package com.basejava.webapp.model;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -12,8 +13,8 @@ public class Experience extends AbstractSection {
     Experience() {
     }
 
-    public Experience(Organization orgs) {
-        this(Arrays.asList(orgs));
+    public Experience(Organization... orgs) {
+        this(new ArrayList<>(Arrays.asList(orgs)));
     }
 
     public Experience(List<Organization> orgs) {

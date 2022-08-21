@@ -61,7 +61,7 @@ public class Organization implements Serializable {
         private String post;
         private String definition;
 
-        Position() {
+        public Position() {
         }
 
         public Position(int startYear, Month startMonth, String post, String definition) {

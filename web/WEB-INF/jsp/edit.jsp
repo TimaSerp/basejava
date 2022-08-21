@@ -42,21 +42,31 @@
                 </P>
             </c:if>
             <c:if test="${type=='EXPERIENCE' || type=='EDUCATION'}">
-                <c:forEach var="org" items="<%=((Experience) value).getOrganizations()%>">
-                    <c:if test="${empty org.homePage.url}">
-                        ${org.homePage.name}<br/>
+                <c:forEach var="org" items="<%=((Experience) value).getOrganizations()%>" varStatus="counter">
+                    <P style="text-align: center">Название организации:
+                        <textarea name="${type}" rows=1 cols=165>${org.homePage.name}</textarea></P>
+                    <P style="text-align: center">Ссылка:
+                        <textarea name="${type}url" rows=1 cols=165>${org.homePage.url}</textarea></P>
+                    <c:if test="${org.positions.size() <= 1}">
+                        <P style="text-align: center">Должность: </P><br/>
                     </c:if>
-                    <c:if test="${!empty org.homePage.url}">
-                        <a href="${org.homePage.url}">${org.homePage.name}</a><br/>
+                    <c:if test="${org.positions.size() > 1}">
+                        <P style="text-align: center">Должности: </P><br/>
                     </c:if>
-                    <ul>
-                        <c:forEach var="pos" items="${org.positions}">
-                            <li>${pos.dateStart} - ${pos.dateFinish}<br/>
-                                    ${pos.post}<br/>
-                                    ${pos.definition}</li>
-                            <br/>
-                        </c:forEach>
-                    </ul>
+                    <c:forEach var="pos" items="${org.positions}">
+                        <jsp:useBean id="pos" type="com.basejava.webapp.model.Organization.Position"/>
+                        От:
+                        <input type="text" name="${type}dateStart${counter.index}" value="${pos.dateStart}"
+                               size=8/><br/>
+                        До:
+                        <input type="text" name="${type}dateFinish${counter.index}" value="${pos.dateFinish}"
+                               size=8/><br/>
+                        Занимаемая должность:
+                        <input type="text" name="${type}post${counter.index}" value="${pos.post}" size=50/><br/>
+                        Описание:
+                        <input type="text" name="${type}definition${counter.index}" value="${pos.definition}"
+                               size=100/><br/><br/>
+                    </c:forEach>
                 </c:forEach>
             </c:if>
         </c:forEach>
