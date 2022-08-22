@@ -15,7 +15,8 @@ public class SimpleLineSection extends AbstractSection {
         this.sectionText = sectionText;
     }
 
-    public String getSectionText() {
+    @Override
+    public String getItems() {
         return sectionText;
     }
 

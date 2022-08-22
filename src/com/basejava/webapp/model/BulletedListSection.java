@@ -21,6 +21,7 @@ public class BulletedListSection extends AbstractSection {
         this.items = items;
     }
 
+    @Override
     public List<String> getItems() {
         return items;
     }

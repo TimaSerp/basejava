@@ -33,14 +33,14 @@
             <c:if test="${type=='ACHIEVEMENT' || type=='QUALIFICATIONS'}">
                 <P style="text-align: center"><b>${type.title}</b>:</P>
                 <ul>
-                    <c:forEach var="item" items="<%=((BulletedListSection) sectionEntry.getValue()).getItems()%>">
+                    <c:forEach var="item" items="${value.items}">
                         <li>${item}<br/></li>
                     </c:forEach>
                 </ul>
             </c:if>
             <c:if test="${type=='EXPERIENCE' || type=='EDUCATION'}">
                 <P style="text-align: center"><b>${type.title}</b>:</P>
-                <c:forEach var="org" items="<%=((Experience) value).getOrganizations()%>">
+                <c:forEach var="org" items="${value.items}">
                     <c:if test="${empty org.homePage.url}">
                         ${org.homePage.name}<br/>
                     </c:if>

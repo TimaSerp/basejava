@@ -24,7 +24,7 @@ public class DataStreamSerializer<T> implements StreamSerializer {
                 switch (sectionType) {
                     case PERSONAL:
                     case OBJECTIVE:
-                        dos.writeUTF(((SimpleLineSection) entry.getValue()).getSectionText());
+                        dos.writeUTF(((SimpleLineSection) entry.getValue()).getItems());
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
@@ -34,7 +34,7 @@ public class DataStreamSerializer<T> implements StreamSerializer {
                         break;
                     case EDUCATION:
                     case EXPERIENCE:
-                        writeWithException(((Experience) entry.getValue()).getOrganizations(), dos, org -> {
+                        writeWithException(((Experience) entry.getValue()).getItems(), dos, org -> {
                             dos.writeUTF(org.getHomePage().getName());
                             String url = org.getHomePage().getUrl();
                             dos.writeBoolean(url == null);

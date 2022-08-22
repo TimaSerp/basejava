@@ -38,7 +38,8 @@ public class Experience extends AbstractSection {
         super();
     }
 
-    public List<Organization> getOrganizations() {
+    @Override
+    public List<Organization> getItems() {
         return orgs;
     }
 

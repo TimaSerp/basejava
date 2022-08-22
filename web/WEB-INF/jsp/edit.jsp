@@ -32,17 +32,20 @@
         <c:forEach var="type" items="<%=SectionType.values()%>">
             <P style="text-align: center"><b>${type.title}</b>:</P>
             <c:set var="value" value="${resume.getSection(type)}" />
-            <jsp:useBean id="value" type="com.basejava.webapp.model.AbstractSection"/>
             <c:if test="${type=='PERSONAL' || type=='OBJECTIVE'}">
                 <P style="text-align: center"><textarea name="${type.name()}" cols=165 rows=3>${value}</textarea></P>
             </c:if>
             <c:if test="${type=='ACHIEVEMENT' || type=='QUALIFICATIONS'}">
                 <P style="text-align: center"><textarea name="${type.name()}" cols=165
-                                                        rows=3><%=String.join("\n", ((BulletedListSection) value).getItems())%></textarea>
+                rows=3>
+                <c:forEach var="item" items="${value.items}">
+                    ${item} <%="\n"%>
+                </c:forEach>
+                </textarea>
                 </P>
             </c:if>
             <c:if test="${type=='EXPERIENCE' || type=='EDUCATION'}">
-                <c:forEach var="org" items="<%=((Experience) value).getOrganizations()%>" varStatus="counter">
+                <c:forEach var="org" items="${value.items}" varStatus="counter">
                     <P style="text-align: center">Название организации:
                         <textarea name="${type}" rows=1 cols=165>${org.homePage.name}</textarea></P>
                     <P style="text-align: center">Ссылка:
