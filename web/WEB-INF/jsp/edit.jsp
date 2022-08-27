@@ -1,7 +1,5 @@
 <%@ page import="com.basejava.webapp.model.ContactType" %>
 <%@ page import="com.basejava.webapp.model.SectionType" %>
-<%@ page import="com.basejava.webapp.model.BulletedListSection" %>
-<%@ page import="com.basejava.webapp.model.Experience" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -18,7 +16,7 @@
         <input type="hidden" name="uuid" value="${resume.uuid}">
         <dl>
             <dt>Имя:</dt>
-            <dd><input type="text" name="fullName" size=50 value="${resume.fullName}"></dd>
+            <dd><input type="text" name="fullName" size=50 value="${resume.fullName}" required></dd>
         </dl>
         <h3>Контакты:</h3>
         <c:forEach var="contactType" items="<%=ContactType.values()%>">
@@ -31,18 +29,13 @@
         <h3>Секции:</h3>
         <c:forEach var="type" items="<%=SectionType.values()%>">
             <P style="text-align: center"><b>${type.title}</b>:</P>
-            <c:set var="value" value="${resume.getSection(type)}" />
+            <c:set var="value" value="${resume.getSection(type)}"/>
             <c:if test="${type=='PERSONAL' || type=='OBJECTIVE'}">
                 <P style="text-align: center"><textarea name="${type.name()}" cols=165 rows=3>${value}</textarea></P>
             </c:if>
             <c:if test="${type=='ACHIEVEMENT' || type=='QUALIFICATIONS'}">
-                <P style="text-align: center"><textarea name="${type.name()}" cols=165
-                rows=3>
-                <c:forEach var="item" items="${value.items}">
-                    ${item} <%="\n"%>
-                </c:forEach>
-                </textarea>
-                </P>
+                <textarea name="${type.name()}" cols=165
+                          rows=3><c:forEach var="item" items="${value.items}" varStatus="counter">${item}<c:if test="${counter.index != (value.items.size()-1)}"><%="\n"%></c:if></c:forEach></textarea>
             </c:if>
             <c:if test="${type=='EXPERIENCE' || type=='EDUCATION'}">
                 <c:forEach var="org" items="${value.items}" varStatus="counter">
@@ -60,10 +53,10 @@
                         <jsp:useBean id="pos" type="com.basejava.webapp.model.Organization.Position"/>
                         От:
                         <input type="text" name="${type}dateStart${counter.index}" value="${pos.dateStart}"
-                               size=8/><br/>
+                               size=8 placeholder="yyyy-mm-dd"/><br/>
                         До:
                         <input type="text" name="${type}dateFinish${counter.index}" value="${pos.dateFinish}"
-                               size=8/><br/>
+                               size=8 placeholder="yyyy-mm-dd"/><br/>
                         Занимаемая должность:
                         <input type="text" name="${type}post${counter.index}" value="${pos.post}" size=50/><br/>
                         Описание:

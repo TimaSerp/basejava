@@ -3,8 +3,6 @@ package com.basejava.webapp.model;
 import java.util.Objects;
 
 public class SimpleLineSection extends AbstractSection {
-    private static final long serialVersionUID = 1L;
-
     private String sectionText;
 
     SimpleLineSection() {
@@ -22,7 +20,7 @@ public class SimpleLineSection extends AbstractSection {
 
     @Override
     public String toString() {
-        return (sectionText);
+        return sectionText;
     }
 
     @Override

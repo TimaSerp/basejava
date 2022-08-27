@@ -30,7 +30,7 @@ public class BulletedListSection extends AbstractSection {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (String text : items) {
-            sb.append(text + "\n");
+            sb.append(text);
         }
         return sb.toString();
     }

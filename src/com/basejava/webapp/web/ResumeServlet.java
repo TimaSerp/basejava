@@ -11,9 +11,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class ResumeServlet extends HttpServlet {
     private Storage storage;
@@ -28,13 +28,10 @@ public class ResumeServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String uuid = request.getParameter("uuid");
         String fullName = request.getParameter("fullName");
-        if (fullName.trim().equals("")) {
-            throw new IllegalArgumentException("Имя не может быть пустым");
-        }
-        boolean isNew = (uuid == null || uuid.length() == 0);
+        boolean isNew = (uuid == null || uuid.trim().length() == 0);
         Resume r;
         if (isNew) {
-            r = new Resume(fullName);
+            r = new Resume(UUID.randomUUID().toString(), fullName);
         } else {
             r = storage.get(uuid);
             r.setFullName(fullName);
@@ -55,17 +52,12 @@ public class ResumeServlet extends HttpServlet {
                 switch (type) {
                     case PERSONAL:
                     case OBJECTIVE:
-                        r.addSection(type, new SimpleLineSection(value));
+                        r.putSection(type, new SimpleLineSection(value));
                         break;
                     case QUALIFICATIONS:
                     case ACHIEVEMENT:
-                        String[] items = value.split("\\n");
-                        for (String item : items) {
-                            if (item.trim().length() == 0) {
-                                throw new IllegalArgumentException("Секция не должна быть пустой");
-                            }
-                        }
-                        r.addSection(type, new BulletedListSection(items));
+                        String[] items = value.split("\n");
+                        r.putSection(type, new BulletedListSection(items));
                         break;
                     case EDUCATION:
                     case EXPERIENCE:
@@ -83,10 +75,10 @@ public class ResumeServlet extends HttpServlet {
                                 for (int j = 0; j < posts.length; j++) {
                                     positions.add(new Organization.Position(DateUtil.parse(startDates[j]), DateUtil.parse(endDates[j]), posts[j], definitions[j]));
                                 }
+                                orgs.add(new Organization(new Link(name, urls[i]), positions));
                             }
-                            orgs.add(new Organization(new Link(name, urls[i]), positions));
                         }
-                        r.addSection(type, new Experience(orgs));
+                        r.putSection(type, new Experience(orgs));
                         break;
                 }
             }
@@ -115,14 +107,22 @@ public class ResumeServlet extends HttpServlet {
                 return;
             case "add":
                 r = new Resume("");
-                r.addSection(SectionType.PERSONAL, new SimpleLineSection(""));
-                r.addSection(SectionType.OBJECTIVE, new SimpleLineSection(""));
-                r.addSection(SectionType.EXPERIENCE, new BulletedListSection(""));
-                r.addSection(SectionType.ACHIEVEMENT, new BulletedListSection(""));
-                r.addSection(SectionType.EXPERIENCE, new Experience(new Organization("", "", new Organization.Position())));
-                r.addSection(SectionType.EDUCATION, new Experience(new Organization("", "", new Organization.Position(LocalDate.now(), LocalDate.now(), "", ""))));
+                r.putSection(SectionType.PERSONAL, new SimpleLineSection(""));
+                r.putSection(SectionType.OBJECTIVE, new SimpleLineSection(""));
+                r.putSection(SectionType.EXPERIENCE, new BulletedListSection(""));
+                r.putSection(SectionType.ACHIEVEMENT, new BulletedListSection(""));
+                r.putSection(SectionType.EXPERIENCE, new Experience(new Organization("", "", new Organization.Position())));
+                r.putSection(SectionType.EDUCATION, new Experience(new Organization("", "", new Organization.Position())));
                 break;
             case "view":
+                r = storage.get(uuid);
+                for (SectionType type : SectionType.values()) {
+                    AbstractSection section = r.getSection(type);
+                    if (section != null) {
+                        r.putSection(type, section);
+                    }
+                }
+                break;
             case "edit":
                 r = storage.get(uuid);
                 for (SectionType type : SectionType.values()) {
@@ -143,7 +143,7 @@ public class ResumeServlet extends HttpServlet {
                                 break;
                         }
                     }
-                    r.addSection(type, section);
+                    r.putSection(type, section);
                 }
                 break;
             default:

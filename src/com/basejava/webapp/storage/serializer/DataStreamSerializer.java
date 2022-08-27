@@ -100,7 +100,7 @@ public class DataStreamSerializer<T> implements StreamSerializer {
                     default:
                         throw new IllegalStateException();
                 }
-                r.addSection(sectionType, section);
+                r.putSection(sectionType, section);
             });
             return r;
         }

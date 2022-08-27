@@ -21,7 +21,7 @@ public class Resume implements Comparable<Resume>, Serializable {
     }
 
     public Resume(String fullName) {
-        this(UUID.randomUUID().toString(), fullName);
+        this("", fullName);
     }
 
     public Resume(String uuid, String fullName) {
@@ -63,7 +63,7 @@ public class Resume implements Comparable<Resume>, Serializable {
         return sections.get(sectionType);
     }
 
-    public void addSection(SectionType sectionType, AbstractSection section) {
+    public void putSection(SectionType sectionType, AbstractSection section) {
         sections.put(sectionType, section);
     }
 

@@ -79,12 +79,12 @@ public class ResumeTestData {
         educationList.add(new Organization(LocalDate.of(2011, 03, 01), LocalDate.of(2011, 04, 01), "http://www.luxoft-training.ru/training/catalog/course.html?ID=22366", "Luxoft", "Курс 'Объектно-ориентированный анализ ИС. Концептуальное моделирование на UML.'", ""));
         Experience education = new Experience(educationList);
 
-        newResume.addSection(PERSONAL, personal);
-        newResume.addSection(OBJECTIVE, objective);
-        newResume.addSection(ACHIEVEMENT, achievement);
-        newResume.addSection(QUALIFICATIONS, qualifications);
-        newResume.addSection(EXPERIENCE, experience);
-        newResume.addSection(EDUCATION, education);
+        newResume.putSection(PERSONAL, personal);
+        newResume.putSection(OBJECTIVE, objective);
+        newResume.putSection(ACHIEVEMENT, achievement);
+        newResume.putSection(QUALIFICATIONS, qualifications);
+        newResume.putSection(EXPERIENCE, experience);
+        newResume.putSection(EDUCATION, education);
         return newResume;
     }
 }
